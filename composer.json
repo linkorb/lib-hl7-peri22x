@@ -1,0 +1,27 @@
+{
+    "name": "linkorb/lib-hl7-peri22x",
+    "description": "Convert HL7 Messages to Peri22x Dossiers.",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "LinkORB",
+            "email": "engineering@linkorb.com",
+            "role": "Development"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Hl7Peri22x\\": "lib/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Hl7Peri22x\\Test\\": "test/"
+        }
+    },
+    "require": {
+        "linkorb/hl7v2": "^1.0",
+        "linkorb/lib-peri22x": "^1.0"
+    }
+}
