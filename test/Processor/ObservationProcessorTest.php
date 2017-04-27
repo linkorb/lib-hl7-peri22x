@@ -3,6 +3,7 @@
 namespace Hl7Peri22x\Test\Processor;
 
 use Hl7v2\MessageParserBuilder;
+use Mimey\MimeTypes;
 use Peri22x\Resource\ResourceFactory;
 use Peri22x\Section\SectionFactory;
 use Peri22x\Value\ValueFactory;
@@ -16,15 +17,11 @@ use Hl7Peri22x\Test\SampleMessages;
 
 class ObservationProcessorTest extends PHPUnit_Framework_TestCase
 {
-    private $finfo;
     private $messageParser;
     private $observationProcessor;
 
     public function __construct($name = null, array $data = array(), $dataName = '')
     {
-        if (class_exists('\\finfo')) {
-            $this->finfo = new \finfo(FILEINFO_MIME);
-        }
         parent::__construct($name, $data, $dataName);
     }
 
@@ -34,67 +31,55 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
         $this->messageParser = $messageParserBuilder->build();
 
         $this->observationProcessor = new ObservationProcessor(
-            new DossierFactory(new DocumentFactory),
+            new DossierFactory(new DocumentFactory(new MimeTypes)),
             new ResourceFactory(),
             new SectionFactory(new ValueFactory)
         );
     }
 
-    public function testTransformMessageOne()
+    /**
+     * @dataProvider dataTransformMessage
+     */
+    public function testTransformMessage($messageNum, $sectionCount)
     {
-        $message = $this->messageParser->parse(SampleMessages::getDatagramBuilder(1)->build());
+        $message = $this
+            ->messageParser
+            ->parse(SampleMessages::getDatagramBuilder($messageNum)->build())
+        ;
         foreach ($message->getSegmentGroups() as $observationParts) {
             $dossier = $this->observationProcessor->getDossier($observationParts);
             $this->assertCount(
-                4,
+                $sectionCount,
                 $dossier->getResource()->getSections(),
                 'The dossier contains the required number of sections.'
             );
             # dump($dossier->toXmlDocument()->toString());
             # $dossier->toXmlDocument()->save('dossier-one.xml');
-            if (!$this->finfo) {
-                continue;
-            }
             foreach ($dossier->getEmbeddedFiles() as $file) {
-                $finfo = $this->finfo->buffer($file->toString());
-                $this->assertNotTrue(
-                    $finfo,
-                    'A description of the type of the embedded file is obtained.'
+                $this->assertSame(
+                    'application/pdf',
+                    $file->getMimeType(),
+                    'The mime type of the embedded file is obtained.'
                 );
-                $this->assertSame('application/pdf; charset=iso-8859-1', $finfo);
+                $this->assertSame(
+                    'pdf',
+                    $file->getExtension(),
+                    'The mime extension of the embedded file is obtained.'
+                );
+                $this->assertSame(
+                    'iso-8859-1',
+                    $file->getCharacterSet(),
+                    'The character set of the embedded file is obtained.'
+                );
             }
-        }
-        if (!$this->finfo) {
-            $this->markTestIncomplete('Unable to invoke finfo_buffer to obtain mime info of embedded files.');
         }
     }
 
-    public function testTransformMessageTwo()
+    public function dataTransformMessage()
     {
-        $message = $this->messageParser->parse(SampleMessages::getDatagramBuilder(2)->build());
-        foreach ($message->getSegmentGroups() as $observationParts) {
-            $dossier = $this->observationProcessor->getDossier($observationParts);
-            $this->assertCount(
-                5,
-                $dossier->getResource()->getSections(),
-                'The dossier contains the required number of sections.'
-            );
-            # dump($dossier->toXmlDocument()->toString());
-            # $dossier->toXmlDocument()->save('dossier-two.xml');
-            if (!$this->finfo) {
-                continue;
-            }
-            foreach ($dossier->getEmbeddedFiles() as $file) {
-                $finfo = $this->finfo->buffer($file->toString());
-                $this->assertNotTrue(
-                    $finfo,
-                    'A description of the type of the embedded file is obtained.'
-                );
-                $this->assertSame('application/pdf; charset=iso-8859-1', $finfo);
-            }
-        }
-        if (!$this->finfo) {
-            $this->markTestIncomplete('Unable to invoke finfo_buffer to obtain mime info of embedded files.');
-        }
+        return [
+            'Message 1 will result in 4 dossier sections.' => [1, 4],
+            'Message 2 will result in 5 dossier sections.' => [2, 5],
+        ];
     }
 }

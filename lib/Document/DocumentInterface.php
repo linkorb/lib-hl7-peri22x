@@ -17,4 +17,19 @@ interface DocumentInterface
      * @throws \Hl7Peri22x\Document\DocumentError;
      */
     public function save($filename);
+
+    /**
+     * @return string
+     */
+    public function getMimeType();
+
+    /**
+     * @return string
+     */
+    public function getExtension();
+
+    /**
+     * @return string
+     */
+    public function getCharacterSet();
 }

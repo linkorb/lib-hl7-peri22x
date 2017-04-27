@@ -22,6 +22,7 @@
     },
     "require": {
         "linkorb/hl7v2": "^1.0",
-        "linkorb/lib-peri22x": "^1.0"
+        "linkorb/lib-peri22x": "^1.0",
+        "ralouphie/mimey": "^1.0"
     }
 }

@@ -5,16 +5,21 @@ namespace Hl7Peri22x\Document;
 /**
  * An Embedded document.
  */
-class EmbeddedDocument implements DocumentInterface
+class EmbeddedDocument extends AbstractDocument
 {
     /**
      * @var string
      */
     private $data;
 
-    public function __construct($data)
-    {
+    public function __construct(
+        $data,
+        $mimeType,
+        $extension = null,
+        $characterSet = 'utf8'
+    ) {
         $this->data = $data;
+        parent::__construct($mimeType, $extension, $characterSet);
     }
 
     public function toString()

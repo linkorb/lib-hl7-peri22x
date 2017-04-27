@@ -7,16 +7,21 @@ use DOMDocument;
 /**
  * An XML document.
  */
-class XmlDocument implements DocumentInterface
+class XmlDocument extends AbstractDocument
 {
     /**
      * @var \DOMDocument
      */
     private $document;
 
-    public function __construct(DOMDocument $domDocument)
-    {
+    public function __construct(
+        DOMDocument $domDocument,
+        $mimeType,
+        $extension = null,
+        $characterSet = 'utf8'
+    ) {
         $this->document = $domDocument;
+        parent::__construct($mimeType, $extension, $characterSet);
     }
 
     public function toString()
