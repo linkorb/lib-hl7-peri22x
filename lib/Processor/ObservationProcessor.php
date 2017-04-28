@@ -267,7 +267,7 @@ class ObservationProcessor
         }
         $intakeSection = $this->sectionFac->create(SectionInterface::TYPE_INTAKE);
         $consultSection = $this->sectionFac->create(SectionInterface::TYPE_CONSULT);
-        $echoSections = [];
+        $echoSection = $this->sectionFac->create(SectionInterface::TYPE_ECHO);
         for (;$report->valid(); $report->next()) {
             if (!$report->current() instanceof ObxSegment) {
                 continue;
@@ -310,8 +310,7 @@ class ObservationProcessor
                 case 'weight':
                     $this->addObservationValueMulti(
                         $obx,
-                        $echoSections,
-                        SectionInterface::TYPE_ECHO,
+                        $echoSection,
                         'peri22-dataelement-82304', // gewicht (gemeten) in Kg
                         false,
                         'Kg'
@@ -320,56 +319,49 @@ class ObservationProcessor
                 case 'hc':
                     $this->addObservationValueMulti(
                         $obx,
-                        $echoSections,
-                        SectionInterface::TYPE_ECHO,
+                        $echoSection,
                         'peri22-dataelement-60060' // hc in mm
                     );
                     break;
                 case 'hcperc':
                     $this->addObservationValueMulti(
                         $obx,
-                        $echoSections,
-                        SectionInterface::TYPE_ECHO,
+                        $echoSection,
                         'peri22-dataelement-60061' // hc percentiel
                     );
                     break;
                 case 'fl':
                     $this->addObservationValueMulti(
                         $obx,
-                        $echoSections,
-                        SectionInterface::TYPE_ECHO,
+                        $echoSection,
                         'peri22-dataelement-60080' // fl in mm
                     );
                     break;
                 case 'flperc':
                     $this->addObservationValueMulti(
                         $obx,
-                        $echoSections,
-                        SectionInterface::TYPE_ECHO,
+                        $echoSection,
                         'peri22-dataelement-60081' // fl percentiel
                     );
                     break;
                 case 'ac':
                     $this->addObservationValueMulti(
                         $obx,
-                        $echoSections,
-                        SectionInterface::TYPE_ECHO,
+                        $echoSection,
                         'peri22-dataelement-60100' // ac in mm
                     );
                     break;
                 case 'acperc':
                     $this->addObservationValueMulti(
                         $obx,
-                        $echoSections,
-                        SectionInterface::TYPE_ECHO,
+                        $echoSection,
                         'peri22-dataelement-60101' // ac percentiel
                     );
                     break;
                 case 'placentaloc':
                     $this->addObservationValueMulti(
                         $obx,
-                        $echoSections,
-                        SectionInterface::TYPE_ECHO,
+                        $echoSection,
                         'peri22-dataelement-80946' // placentalokalisatie
                     );
                     break;
@@ -396,14 +388,12 @@ class ObservationProcessor
             }
             $dossier->getResource()->addSection($consultSection);
         }
-        foreach (array_values($echoSections) as $echoSection) {
-            if (!empty($echoSection->getValues())) {
-                $echoSection->setCreateStamp($now);
-                if ($obsTimestamp) {
-                    $echoSection->setEffectStamp($obsTimestamp);
-                }
-                $dossier->getResource()->addSection($echoSection);
+        if (!empty($echoSection->getValues())) {
+            $echoSection->setCreateStamp($now);
+            if ($obsTimestamp) {
+                $echoSection->setEffectStamp($obsTimestamp);
             }
+            $dossier->getResource()->addSection($echoSection);
         }
     }
 
@@ -412,7 +402,8 @@ class ObservationProcessor
         SectionInterface $section,
         $concept,
         $isDate = false,
-        $unit = null
+        $unit = null,
+        $subId = null
     ) {
         foreach ($obx->getFieldObservationValue() as $obsVal) {
             $v = $this->getValue($obsVal);
@@ -426,7 +417,11 @@ class ObservationProcessor
                     $unit
                 );
             }
-            $section->addValue($concept, $v);
+            if ($subId) {
+                $section->addValue($concept, $v, ['repeat' => $subId]);
+            } else {
+                $section->addValue($concept, $v);
+            }
         }
     }
 
@@ -436,22 +431,19 @@ class ObservationProcessor
      */
     private function addObservationValueMulti(
         ObxSegment $obx,
-        &$sections,
-        $sectionType,
+        SectionInterface $section,
         $concept,
         $isDate = false,
         $unit = null
     ) {
         $subId = $this->getValue($obx->getFieldObservationSubid());
-        if (!array_key_exists($subId, $sections)) {
-            $sections[$subId] = $this->sectionFac->create($sectionType);
-        }
         $this->addObservationValue(
             $obx,
-            $sections[$subId],
+            $section,
             $concept,
             $isDate,
-            $unit
+            $unit,
+            $subId
         );
     }
 

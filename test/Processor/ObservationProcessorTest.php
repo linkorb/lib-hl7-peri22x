@@ -79,7 +79,7 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
     {
         return [
             'Message 1 will result in 4 dossier sections.' => [1, 4],
-            'Message 2 will result in 5 dossier sections.' => [2, 5],
+            'Message 2 will result in 5 dossier sections.' => [2, 4],
         ];
     }
 }
