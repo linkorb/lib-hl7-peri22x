@@ -312,9 +312,9 @@ class ObservationProcessor
                         $obx,
                         $echoSections,
                         SectionInterface::TYPE_ECHO,
-                        'peri22-dataelement-82304', // gewicht (gemeten)
+                        'peri22-dataelement-82304', // gewicht (gemeten) in Kg
                         false,
-                        true
+                        'Kg'
                     );
                     break;
                 case 'hc':
@@ -412,15 +412,19 @@ class ObservationProcessor
         SectionInterface $section,
         $concept,
         $isDate = false,
-        $hasUnit = false
+        $unit = null
     ) {
         foreach ($obx->getFieldObservationValue() as $obsVal) {
             $v = $this->getValue($obsVal);
             if ($isDate) {
                 $v = $this->normaliseDate($v);
             }
-            if ($hasUnit) {
-                $v .= ' ' . $this->getValue($obx->getFieldUnits()->getIdentifier());
+            if ($unit) {
+                $v = $this->unitConversion(
+                    $v,
+                    $this->getValue($obx->getFieldUnits()->getIdentifier()),
+                    $unit
+                );
             }
             $section->addValue($concept, $v);
         }
@@ -436,7 +440,7 @@ class ObservationProcessor
         $sectionType,
         $concept,
         $isDate = false,
-        $hasUnit = false
+        $unit = null
     ) {
         $subId = $this->getValue($obx->getFieldObservationSubid());
         if (!array_key_exists($subId, $sections)) {
@@ -447,8 +451,28 @@ class ObservationProcessor
             $sections[$subId],
             $concept,
             $isDate,
-            $hasUnit
+            $unit
         );
+    }
+
+    private function unitConversion($value, $unit, $targetUnit)
+    {
+        if ($unit === $targetUnit) {
+            return $value;
+        }
+        $conversions = [
+            'Kg' => [
+                'g' => function ($x) {
+                    return 1e-3 * (float) $x;
+                },
+            ],
+        ];
+        if (!array_key_exists($targetUnit, $conversions)
+            || !array_key_exists($unit, $conversions[$targetUnit])
+        ) {
+            return ''; # no value is better than the wrong value
+        }
+        return (string) $conversions[$targetUnit][$unit]($value);
     }
 
     private function extractEmbeddedFile(DossierInterface $dossier, ObxSegment $obx)
