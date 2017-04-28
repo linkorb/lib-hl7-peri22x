@@ -277,10 +277,6 @@ class ObservationProcessor
              */
             $obx = $report->current();
             $valueName = $this->getValue($obx->getFieldObservationIdentifier()->getIdentifier());
-            $concept = null;
-            $section = null;
-            $isDate = false;
-            $hasUnits = false;
             switch (strtolower($valueName)) {
                 case 'gravida':
                     $this->addObservationValue(
