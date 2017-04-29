@@ -17,6 +17,7 @@ use Peri22x\Section\SectionInterface;
 
 use Hl7Peri22x\Dossier\DossierFactory;
 use Hl7Peri22x\Dossier\DossierInterface;
+use Hl7Peri22x\Processor\Helper\DateTimeHelper;
 
 /**
  * Convert a group of HL7 Segments, representing an Observation report and
@@ -510,9 +511,8 @@ class ObservationProcessor
 
     private function normaliseDate($value)
     {
-        $dt = null;
         try {
-            $dt = new DateTime($value);
+            return DateTimeHelper::format($value);
         } catch (Exception $e) {
             throw new ProcessorError(
                 "Unable to normalise a date/time with value \"{$value}\".",
@@ -520,14 +520,12 @@ class ObservationProcessor
                 $e
             );
         }
-        return $dt->format(SectionInterface::DATETIME_FORMAT);
     }
 
     private function normaliseTimestamp($value)
     {
-        $dt = null;
         try {
-            $dt = new DateTime($value);
+            return DateTimeHelper::format($value);
         } catch (Exception $e) {
             throw new ProcessorError(
                 "Unable to normalise a timestamp with value \"{$value}\".",
@@ -535,6 +533,5 @@ class ObservationProcessor
                 $e
             );
         }
-        return $dt->format(SectionInterface::TIMESTAMP_FORMAT);
     }
 }
