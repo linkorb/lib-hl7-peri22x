@@ -277,6 +277,7 @@ class ObservationProcessor
              * @var \Hl7v2\Segment\ObxSegment $obx
              */
             $obx = $report->current();
+            $valueType = $this->getValue($obx->getFieldValueType());
             $valueName = $this->getValue($obx->getFieldObservationIdentifier()->getIdentifier());
             switch (strtolower($valueName)) {
                 case 'gravida':
@@ -369,7 +370,8 @@ class ObservationProcessor
                 case 'rapport':
                     $this->extractEmbeddedFile(
                         $dossier,
-                        $obx
+                        $obx,
+                        $valueType
                     );
                     break;
             }
@@ -407,9 +409,13 @@ class ObservationProcessor
         $subId = null
     ) {
         foreach ($obx->getFieldObservationValue() as $obsVal) {
-            $v = $this->getValue($obsVal);
+            $v = null;
             if ($isDate) {
-                $v = $this->normaliseDate($v);
+                if ($obsVal instanceof TsDataType) {
+                    $v = $this->getDateValue($obsVal->getTime());
+                }
+            } else {
+                $v = $this->getValue($obsVal);
             }
             if ($unit) {
                 $v = $this->unitConversion(
@@ -468,10 +474,29 @@ class ObservationProcessor
         return (string) $conversions[$targetUnit][$unit]($value);
     }
 
-    private function extractEmbeddedFile(DossierInterface $dossier, ObxSegment $obx)
+    private function extractEmbeddedFile(DossierInterface $dossier, ObxSegment $obx, $valueType)
     {
         foreach ($obx->getFieldObservationValue() as $obsVal) {
-            $fileData = base64_decode($obsVal->getValue(), true);
+            if ($valueType !== 'ED') {
+                continue;
+            }
+            $fileData = null;
+            $enc = $this->getValue($obsVal->getEncoding());
+            if ($enc === 'Base64') {
+                $fileData = base64_decode($obsVal->getData()->getValue(), true);
+                if ($fileData === false) {
+                    throw new ProcessorError(
+                        "Unable to decode Base64 encoded embedded file; encoding is invalid."
+                    );
+                }
+            } elseif ($enc === 'A') {
+                $fileData = $obsVal->getData()->getValue();
+            } else {
+                throw new ProcessorError(
+                    "Unable to extract embedded file encoded as \"{$enc}\"."
+                );
+            }
+
             $dossier->addFileData($fileData);
         }
     }

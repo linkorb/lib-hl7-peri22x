@@ -26,7 +26,7 @@ OBX|12|NM|WEIGHTperc|1|48,5|Yudkin|||||F
 OBX|13|TX|PLACENTALOC|1|hoog anterior||||||F
 OBX|14|TX|DIAGNOSIS||Groei: goede groei op de p ||||||F
 OBX|15|TX|CONCLUSION||dit is de conclusie~dit is de 2e regel||||||F
-OBX|16|ED|RAPPORT||JVBERi0xLjQKJeLj||||||F
+OBX|16|ED|RAPPORT||PDF^TEXT^^Base64^JVBERi0xLjQKJeLj||||||F
 EOD;
 
     const MESSAGE_TWIN = <<<'EOD'
@@ -46,7 +46,7 @@ OBX|10|NM|WEIGHT|2|532|g^^ISO+|||||F
 OBX|11|TX|PLACENTALOC|1|hoog anterior||||||F
 OBX|12|TX|PLACENTALOC|2|hoog anterior||||||F
 OBX|13|TX|DIAGNOSIS||Er zijn geen aanwijzingen voor structurele afwijkingen. ||||||F
-OBX|14|ED|RAPPORT||JVBERi0xLjQKJeLj||||||F
+OBX|14|ED|RAPPORT||PDF^TEXT^^Base64^JVBERi0xLjQKJeLj||||||F
 EOD;
 
     public static function getDatagramBuilder($message = 1)
