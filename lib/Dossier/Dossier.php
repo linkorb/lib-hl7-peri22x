@@ -5,6 +5,8 @@ namespace Hl7Peri22x\Dossier;
 use DomDocument;
 
 use Hl7Peri22x\Document\DocumentFactory;
+use Hl7Peri22x\Document\DocumentInterface;
+use Peri22x\Attachment\AttachmentFactory;
 use Peri22x\Resource\Resource;
 
 /**
@@ -12,6 +14,10 @@ use Peri22x\Resource\Resource;
  */
 class Dossier implements DossierInterface
 {
+    /**
+     * @var \Peri22x\Attachment\AttachmentFactory
+     */
+    private $attachmentFactory;
     /**
      * @var \Hl7Peri22x\Document\DocumentFactory
      */
@@ -25,8 +31,11 @@ class Dossier implements DossierInterface
      */
     private $resource;
 
-    public function __construct(DocumentFactory $documentFactory)
-    {
+    public function __construct(
+        AttachmentFactory $attachmentFactory,
+        DocumentFactory $documentFactory
+    ) {
+        $this->attachmentFactory = $attachmentFactory;
         $this->documentFactory = $documentFactory;
     }
 
@@ -48,6 +57,12 @@ class Dossier implements DossierInterface
     public function setResource(Resource $resource)
     {
         $this->resource = $resource;
+        if (!sizeof($this->embeddedFiles)) {
+            return;
+        }
+        foreach ($this->embeddedFiles as $embeddedFiles) {
+            $this->registerAttachment($embeddedFile);
+        }
     }
 
     public function getResource()
@@ -57,6 +72,18 @@ class Dossier implements DossierInterface
 
     public function addFileData($data)
     {
-        $this->embeddedFiles[] = $this->documentFactory->createEmbeddedDocument($data);
+        $embeddedFile = $this->documentFactory->createEmbeddedDocument($data);
+        $this->embeddedFiles[] = $embeddedFile;
+
+        if ($this->resource) {
+            $this->registerAttachment($embeddedFile);
+        }
+    }
+
+    private function registerAttachment(DocumentInterface $embeddedFile)
+    {
+        $attachment = $this->attachmentFactory->create();
+        $attachment->setMimeType($embeddedFile->getMimeType());
+        $this->resource->addAttachment($attachment);
     }
 }

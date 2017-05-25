@@ -4,6 +4,7 @@ namespace Hl7Peri22x\Test\Processor;
 
 use Hl7v2\MessageParserBuilder;
 use Mimey\MimeTypes;
+use Peri22x\Attachment\AttachmentFactory;
 use Peri22x\Resource\ResourceFactory;
 use Peri22x\Section\SectionFactory;
 use Peri22x\Value\ValueFactory;
@@ -31,7 +32,10 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
         $this->messageParser = $messageParserBuilder->build();
 
         $this->observationProcessor = new ObservationProcessor(
-            new DossierFactory(new DocumentFactory(new MimeTypes)),
+            new DossierFactory(
+                new AttachmentFactory,
+                new DocumentFactory(new MimeTypes)
+            ),
             new ResourceFactory(),
             new SectionFactory(new ValueFactory)
         );
