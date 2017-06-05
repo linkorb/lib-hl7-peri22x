@@ -291,7 +291,7 @@ class ObservationProcessor
         $intakeSection = $this->sectionFac->create(SectionInterface::TYPE_INTAKE);
         $consultSection = $this->sectionFac->create(SectionInterface::TYPE_CONSULT);
         $echoSection = $this->sectionFac->create(SectionInterface::TYPE_ECHO);
-        for (;$report->valid(); $report->next()) {
+        for (; $report->valid(); $report->next()) {
             if (!$report->current() instanceof ObxSegment) {
                 continue;
             }
