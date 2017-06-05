@@ -246,18 +246,40 @@ class ObservationProcessor
          * @var \Hl7v2\Segment\ObrSegment $obr
          */
         $obr = $report->current();
-        $obsTimestamp = null;
-        $resultStatus = null;
+        if ($obr->getFieldFillerOrderNumber() !== null &&
+            $obr->getFieldFillerOrderNumber()->getEntityIdentifier() !== null &&
+            $obr->getFieldFillerOrderNumber()->getEntityIdentifier()->hasValue()
+        ) {
+            $dossier->addMetadata(
+                'order_number',
+                $this->getValue($obr->getFieldFillerOrderNumber()->getEntityIdentifier())
+            );
+        }
+        if ($obr->getFieldFillerOrderNumber() !== null &&
+            $obr->getFieldFillerOrderNumber()->getNamespaceId() !== null &&
+            $obr->getFieldFillerOrderNumber()->getNamespaceId()->hasValue()
+        ) {
+            $dossier->addMetadata(
+                'filler_application',
+                $this->getValue($obr->getFieldFillerOrderNumber()->getNamespaceId())
+            );
+        }
         if ($obr->getFieldObservationDatetime() !== null &&
             $obr->getFieldObservationDatetime()->getTime() !== null &&
             $obr->getFieldObservationDatetime()->getTime()->hasValue()
         ) {
-            $obsTimestamp = $this->getTimestampValue($obr->getFieldObservationDatetime()->getTime());
+            $dossier->addMetadata(
+                'observation_time',
+                $this->getTimestampValue($obr->getFieldObservationDatetime()->getTime())
+            );
         }
         if ($obr->getFieldResultStatus() !== null &&
             $obr->getFieldResultStatus()->hasValue()
         ) {
-            $resultStatus = $this->getValue($obr->getFieldResultStatus());
+            $dossier->addMetadata(
+                'result_status',
+                $this->getValue($obr->getFieldResultStatus())
+            );
         }
         if ($obr->getFieldPrincipalResultInterpreter() !== null &&
             $obr->getFieldPrincipalResultInterpreter()->getName() !== null &&
@@ -379,22 +401,22 @@ class ObservationProcessor
         $now = (new DateTime)->format(SectionInterface::TIMESTAMP_FORMAT);
         if (!empty($intakeSection->getValues())) {
             $intakeSection->setCreateStamp($now);
-            if ($obsTimestamp) {
-                $intakeSection->setEffectStamp($obsTimestamp);
+            if ($dossier->hasMetadata('observation_time')) {
+                $intakeSection->setEffectStamp($dossier->getMetadata('observation_time'));
             }
             $dossier->getResource()->addSection($intakeSection);
         }
         if (!empty($consultSection->getValues())) {
             $consultSection->setCreateStamp($now);
-            if ($obsTimestamp) {
-                $consultSection->setEffectStamp($obsTimestamp);
+            if ($dossier->hasMetadata('observation_time')) {
+                $consultSection->setEffectStamp($dossier->getMetadata('observation_time'));
             }
             $dossier->getResource()->addSection($consultSection);
         }
         if (!empty($echoSection->getValues())) {
             $echoSection->setCreateStamp($now);
-            if ($obsTimestamp) {
-                $echoSection->setEffectStamp($obsTimestamp);
+            if ($dossier->hasMetadata('observation_time')) {
+                $echoSection->setEffectStamp($dossier->getMetadata('observation_time'));
             }
             $dossier->getResource()->addSection($echoSection);
         }
