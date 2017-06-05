@@ -35,4 +35,24 @@ interface DossierInterface
      * @param string $data
      */
     public function addFileData($data);
+
+    /**
+     * @param string $name
+     * @param mixed $value
+     */
+    public function addMetadata($name, $value);
+
+    /**
+     * @param string $name
+     * @return bool
+     */
+    public function hasMetadata($name);
+
+    /**
+     * Get all metadata or a metadata value by name.
+     *
+     * @param null|string $name
+     * @return array|mixed
+     */
+    public function getMetadata($name = null);
 }

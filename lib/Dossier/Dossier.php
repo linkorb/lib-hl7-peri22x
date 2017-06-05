@@ -27,6 +27,10 @@ class Dossier implements DossierInterface
      */
     private $embeddedFiles = [];
     /**
+     * @var array
+     */
+    private $metadata = [];
+    /**
      * @var \Peri22x\Resource\Resource
      */
     private $resource;
@@ -78,6 +82,26 @@ class Dossier implements DossierInterface
         if ($this->resource) {
             $this->registerAttachment($embeddedFile);
         }
+    }
+
+    public function addMetadata($name, $value)
+    {
+        $this->metadata[$name] = $value;
+    }
+
+    public function hasMetadata($name)
+    {
+        return array_key_exists($name, $this->metadata);
+    }
+
+    public function getMetadata($name = null)
+    {
+        if ($name === null) {
+            return $this->metadata;
+        } elseif (!array_key_exists($name, $this->metadata)) {
+            return null;
+        }
+        return $this->metadata[$name];
     }
 
     private function registerAttachment(DocumentInterface $embeddedFile)
