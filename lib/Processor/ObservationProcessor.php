@@ -348,6 +348,7 @@ class ObservationProcessor
                     );
                     break;
                 case 'hcperc':
+                case 'hcp':
                     $this->addObservationValueMulti(
                         $obx,
                         $echoSection,
@@ -362,6 +363,7 @@ class ObservationProcessor
                     );
                     break;
                 case 'flperc':
+                case 'flp':
                     $this->addObservationValueMulti(
                         $obx,
                         $echoSection,
@@ -376,6 +378,7 @@ class ObservationProcessor
                     );
                     break;
                 case 'acperc':
+                case 'acp':
                     $this->addObservationValueMulti(
                         $obx,
                         $echoSection,
