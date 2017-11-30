@@ -4,6 +4,7 @@ namespace Hl7Peri22x\Processor;
 
 use DateTime;
 
+use Hl7v2\DataType\EdDataType;
 use Hl7v2\DataType\SimpleDataTypeInterface;
 use Hl7v2\DataType\XpnDataType;
 use Hl7v2\Segment\Group\SegmentGroup;
@@ -501,29 +502,39 @@ class ObservationProcessor
 
     private function extractEmbeddedFile(DossierInterface $dossier, ObxSegment $obx, $valueType)
     {
-        foreach ($obx->getFieldObservationValue() as $obsVal) {
-            if ($valueType !== 'ED') {
-                continue;
+        if ($valueType === 'ED') {
+            foreach ($obx->getFieldObservationValue() as $obsVal) {
+                $dossier->addFileData($this->extractEncapsulatedData($obsVal));
             }
-            $fileData = null;
-            $enc = $this->getValue($obsVal->getEncoding());
-            if ($enc === 'Base64') {
-                $fileData = base64_decode($obsVal->getData()->getValue(), true);
-                if ($fileData === false) {
-                    throw new ProcessorError(
-                        "Unable to decode Base64 encoded embedded file; encoding is invalid."
-                    );
-                }
-            } elseif ($enc === 'A') {
-                $fileData = $obsVal->getData()->getValue();
-            } else {
-                throw new ProcessorError(
-                    "Unable to extract embedded file encoded as \"{$enc}\"."
-                );
-            }
-
-            $dossier->addFileData($fileData);
         }
+        if ($valueType === 'TX') {
+            $lines = [];
+            foreach ($obx->getFieldObservationValue() as $obsVal) {
+                $lines[] = $this->getValue($obsVal);
+            }
+            $dossier->addFileData(implode("\n", $lines) . "\n");
+        }
+    }
+
+    private function extractEncapsulatedData(EdDataType $data)
+    {
+        $fileData = null;
+        $enc = $this->getValue($data->getEncoding());
+        if ($enc === 'Base64') {
+            $fileData = base64_decode($data->getData()->getValue(), true);
+            if ($fileData === false) {
+                throw new ProcessorError(
+                    "Unable to decode Base64 encoded embedded file; encoding is invalid."
+                    );
+            }
+        } elseif ($enc === 'A') {
+            $fileData = $data->getData()->getValue();
+        } else {
+            throw new ProcessorError(
+                "Unable to extract embedded file encoded as \"{$enc}\"."
+            );
+        }
+        return $fileData;
     }
 
     private function getValue(SimpleDataTypeInterface $data)
