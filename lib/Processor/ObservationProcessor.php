@@ -83,7 +83,7 @@ class ObservationProcessor
         $now = new DateTime;
         $section->setCreateStamp($now->format(SectionInterface::TIMESTAMP_FORMAT));
 
-        if ($pid->getFieldSetId() !== null) {
+        if ($pid->getFieldSetId() && $pid->getFieldSetId()->hasValue()) {
             $section->setId($this->getValue($pid->getFieldSetId()));
         }
 
