@@ -393,6 +393,20 @@ class ObservationProcessor
                         'peri22-dataelement-80946' // placentalokalisatie
                     );
                     break;
+                case 'diagnosis':
+                    $this->addObservationValueText(
+                        $obx,
+                        $echoSection,
+                        'peri22x-echo-diagnose'
+                    );
+                    break;
+                case 'conclusion':
+                    $this->addObservationValueText(
+                        $obx,
+                        $echoSection,
+                        'peri22x-echo-conclusie'
+                    );
+                    break;
                 case 'rapport':
                     $this->extractEmbeddedFile(
                         $dossier,
@@ -456,6 +470,18 @@ class ObservationProcessor
                 $section->addValue($concept, $v);
             }
         }
+    }
+
+    private function addObservationValueText(
+        ObxSegment $obx,
+        SectionInterface $section,
+        $concept
+    ) {
+        $lines = [];
+        foreach ($obx->getFieldObservationValue() as $obsVal) {
+            $lines[] = $this->getValue($obsVal);
+        }
+        $section->addCdataValue($concept, implode("\n", $lines));
     }
 
     /*

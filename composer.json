@@ -22,7 +22,7 @@
     },
     "require": {
         "linkorb/lib-hl7v2": "^1.1",
-        "linkorb/lib-peri22x": "^1.1",
+        "linkorb/lib-peri22x": "^1.3",
         "ralouphie/mimey": "^1.0"
     },
     "require-dev": {
