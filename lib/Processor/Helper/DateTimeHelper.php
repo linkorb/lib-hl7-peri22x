@@ -67,4 +67,41 @@ class DateTimeHelper
 
         return $dt->format($outFormat);
     }
+
+    /**
+     * Convert a string like "1w1d" to a string representing a number of days.
+     *
+     * @param string $value
+     *
+     * @return string
+     */
+    public static function convertToDays($value)
+    {
+        if ('' === $value || ctype_digit($value)) {
+            return $value;
+        }
+
+        $accumulator = 0;
+        $digits = '';
+        foreach (str_split($value) as $char) {
+            if (ctype_digit($char)) {
+                $digits .= $char;
+                continue;
+            }
+            if ('d' === strtolower($char)) {
+                $accumulator += (int) $digits;
+                $digits = '';
+            } elseif ('w' === strtolower($char)) {
+                $accumulator += 7 * (int) $digits;
+                $digits = '';
+            } else {
+                $digits = '';
+            }
+        }
+        if ('' !== $digits) {
+            $accumulator += (int) $digits;
+        }
+
+        return (string) $accumulator;
+    }
 }

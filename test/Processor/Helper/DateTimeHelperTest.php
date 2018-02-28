@@ -132,4 +132,73 @@ class DateTimeHelperTest extends PHPUnit_Framework_TestCase
             ],
         ];
     }
+
+    /**
+     * @dataProvider dataDateTimeHelperDays
+     */
+    public function testConvertToDays($expected, $input)
+    {
+        $this->assertSame(
+            $expected,
+            DateTimeHelper::convertToDays($input)
+        );
+    }
+
+    public function dataDateTimeHelperDays()
+    {
+        return [
+            'An integer is assumed to be a number of days already' => [
+                '123',
+                '123',
+            ],
+            '1d is interpreted as 1 day' => [
+                '1',
+                '1d',
+            ],
+            '1w1 is interpreted as 1 week and 1 day' => [
+                '8',
+                '1w1',
+            ],
+            '1w1d is interpreted as 1 week and 1 day' => [
+                '8',
+                '1w1d',
+            ],
+            '1wd is interpreted as 1 week' => [
+                '7',
+                '1w0d',
+            ],
+            '1wd is interpreted as 1 week' => [
+                '7',
+                '1wd',
+            ],
+            'w1d is interpreted as 1 day' => [
+                '1',
+                'w1d',
+            ],
+            'w1 is interpreted as 1 day' => [
+                '1',
+                'w1',
+            ],
+            'x1 is interpreted as 1 day' => [
+                '1',
+                'x1',
+            ],
+            'x1w1d is interpreted as 1 week and 1 day' => [
+                '8',
+                'x1w1d',
+            ],
+            '365x1 is interpreted as 1 day' => [
+                '1',
+                '365x1',
+            ],
+            'wd has no digits and is interpreted as zero' => [
+                '0',
+                'wd',
+            ],
+            'xyz has no digits and is interpreted as zero' => [
+                '0',
+                'xyz',
+            ],
+        ];
+    }
 }
