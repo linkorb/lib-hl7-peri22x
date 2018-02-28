@@ -360,7 +360,7 @@ class ObservationProcessor
                     $this->addObservationValueMulti(
                         $obx,
                         $echoSection,
-                        'peri22-dataelement-60080' // fl in mm
+                        'peri22-dataelement-60100' // fl in mm
                     );
                     break;
                 case 'flperc':
@@ -368,14 +368,14 @@ class ObservationProcessor
                     $this->addObservationValueMulti(
                         $obx,
                         $echoSection,
-                        'peri22-dataelement-60081' // fl percentiel
+                        'peri22-dataelement-60101' // fl percentiel
                     );
                     break;
                 case 'ac':
                     $this->addObservationValueMulti(
                         $obx,
                         $echoSection,
-                        'peri22-dataelement-60100' // ac in mm
+                        'peri22-dataelement-60080' // ac in mm
                     );
                     break;
                 case 'acperc':
@@ -383,7 +383,7 @@ class ObservationProcessor
                     $this->addObservationValueMulti(
                         $obx,
                         $echoSection,
-                        'peri22-dataelement-60101' // ac percentiel
+                        'peri22-dataelement-60081' // ac percentiel
                     );
                     break;
                 case 'placentaloc':
