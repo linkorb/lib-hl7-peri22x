@@ -82,8 +82,8 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
     public function dataTransformMessage()
     {
         return [
-            'Message 1 will result in 4 dossier sections.' => [1, 4],
-            'Message 2 will result in 5 dossier sections.' => [2, 4],
+            'Message 1 will result in 3 dossier sections.' => [1, 3],
+            'Message 2 will result in 3 dossier sections.' => [2, 3],
         ];
     }
 }

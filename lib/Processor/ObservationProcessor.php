@@ -328,8 +328,9 @@ class ObservationProcessor
                 case 'gestational_age':
                     $this->addObservationValue(
                         $obx,
-                        $consultSection,
-                        'peri22-dataelement-80738' // (Zwangerschap) am duur
+                        $echoSection,
+                        'peri22-dataelement-50021', // Zwangerschapsduur op datum onderzoek,
+                        false
                     );
                     break;
                 case 'weight':
