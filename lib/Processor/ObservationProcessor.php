@@ -336,9 +336,9 @@ class ObservationProcessor
                     $this->addObservationValueMulti(
                         $obx,
                         $echoSection,
-                        'peri22-dataelement-82304', // gewicht (gemeten) in Kg
+                        'peri22-dataelement-82340', // efw in grammes
                         false,
-                        'Kg'
+                        'g'
                     );
                     break;
                 case 'hc':
@@ -515,6 +515,11 @@ class ObservationProcessor
             'Kg' => [
                 'g' => function ($x) {
                     return 1e-3 * (float) $x;
+                },
+            ],
+            'g' => [
+                'Kg' => function ($x) {
+                    return 1e3 * (float) $x;
                 },
             ],
         ];
