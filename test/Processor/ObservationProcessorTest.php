@@ -86,4 +86,20 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
             'Message 2 will result in 3 dossier sections.' => [2, 3],
         ];
     }
+
+    public function testGestationalAgeIsMeasuredInDays()
+    {
+        $message = $this
+            ->messageParser
+            ->parse(SampleMessages::getDatagramBuilder(1)->build())
+        ;
+        $concept = $this
+            ->observationProcessor
+            ->getDossier(array_shift($message->getSegmentGroups()))
+            ->getResource()
+            ->getSection('echo')
+            ->getValue('peri22-dataelement-50021')
+        ;
+        $this->assertSame('192', (string) $concept);
+    }
 }

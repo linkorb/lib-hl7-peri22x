@@ -330,7 +330,8 @@ class ObservationProcessor
                         $obx,
                         $echoSection,
                         'peri22-dataelement-50021', // Zwangerschapsduur op datum onderzoek,
-                        false
+                        false,
+                        'days'
                     );
                     break;
                 case 'weight':
@@ -521,6 +522,11 @@ class ObservationProcessor
             'g' => [
                 'Kg' => function ($x) {
                     return 1e3 * (float) $x;
+                },
+            ],
+            'days' => [
+                '' => function ($x) {
+                    return DateTimeHelper::convertToDays($x);
                 },
             ],
         ];
