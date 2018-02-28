@@ -9,7 +9,7 @@ use Hl7Peri22x\Processor\Helper\DateTimeHelper;
 class DateTimeHelperTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @dataProvider dataDateTimeHelper
+     * @dataProvider dataDateTimeHelperFormat
      */
     public function testFormat($expected, $input)
     {
@@ -19,7 +19,7 @@ class DateTimeHelperTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function dataDateTimeHelper()
+    public function dataDateTimeHelperFormat()
     {
         return [
             [

@@ -557,7 +557,7 @@ class ObservationProcessor
             if ($fileData === false) {
                 throw new ProcessorError(
                     "Unable to decode Base64 encoded embedded file; encoding is invalid."
-                    );
+                );
             }
         } elseif ($enc === 'A') {
             $fileData = $data->getData()->getValue();
