@@ -93,9 +93,10 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
             ->messageParser
             ->parse(SampleMessages::getDatagramBuilder(1)->build())
         ;
+        $segmentGroups = $message->getSegmentGroups();
         $concept = $this
             ->observationProcessor
-            ->getDossier(array_shift($message->getSegmentGroups()))
+            ->getDossier(array_shift($segmentGroups))
             ->getResource()
             ->getSection('echo')
             ->getValue('peri22-dataelement-50021')
