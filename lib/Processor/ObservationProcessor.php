@@ -248,6 +248,11 @@ class ObservationProcessor
          * @var \Hl7v2\Segment\ObrSegment
          */
         $obr = $report->current();
+
+        $intakeSection = $this->sectionFac->create(SectionInterface::TYPE_INTAKE);
+        $consultSection = $this->sectionFac->create(SectionInterface::TYPE_CONSULT);
+        $echoSection = $this->sectionFac->create(SectionInterface::TYPE_ECHO);
+
         if ($obr->getFieldFillerOrderNumber() !== null &&
             $obr->getFieldFillerOrderNumber()->getEntityIdentifier() !== null &&
             $obr->getFieldFillerOrderNumber()->getEntityIdentifier()->hasValue()
@@ -290,9 +295,6 @@ class ObservationProcessor
         ) {
             // a name!
         }
-        $intakeSection = $this->sectionFac->create(SectionInterface::TYPE_INTAKE);
-        $consultSection = $this->sectionFac->create(SectionInterface::TYPE_CONSULT);
-        $echoSection = $this->sectionFac->create(SectionInterface::TYPE_ECHO);
         for (; $report->valid(); $report->next()) {
             if (!$report->current() instanceof ObxSegment) {
                 continue;
