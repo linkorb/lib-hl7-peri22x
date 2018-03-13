@@ -152,4 +152,21 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
         ;
         $this->assertSame('praktijkveendam', $referrer);
     }
+
+    public function testExaminationDateIsExtractedFromFieldObservationDatetime()
+    {
+        $message = $this
+            ->messageParser
+            ->parse(SampleMessages::getDatagramBuilder(1)->build())
+        ;
+        $segmentGroups = $message->getSegmentGroups();
+        $concept = $this
+            ->observationProcessor
+            ->getDossier(array_shift($segmentGroups))
+            ->getResource()
+            ->getSection('echo')
+            ->getValue('peri22-dataelement-50020')
+        ;
+        $this->assertSame('2016-05-13 13:03:00', (string) $concept);
+    }
 }

@@ -279,6 +279,10 @@ class ObservationProcessor
                 'observation_time',
                 $this->getTimestampValue($obr->getFieldObservationDatetime()->getTime())
             );
+            $echoSection->addValue(
+                'peri22-dataelement-50020',
+                $this->getDateValue($obr->getFieldObservationDatetime()->getTime())
+            );
         }
         if ($obr->getFieldResultStatus() !== null &&
             $obr->getFieldResultStatus()->hasValue()
