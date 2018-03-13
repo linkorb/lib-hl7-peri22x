@@ -294,6 +294,10 @@ class ObservationProcessor
             $obr->getFieldPrincipalResultInterpreter()->getName()->getIdNumber()->hasValue()
         ) {
             // a name!
+            $echoSection->addValue(
+                'peri22-dataelement-80754',
+                $this->getValue($obr->getFieldPrincipalResultInterpreter()->getName()->getIdNumber())
+            );
         }
         for (; $report->valid(); $report->next()) {
             if (!$report->current() instanceof ObxSegment) {

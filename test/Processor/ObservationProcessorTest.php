@@ -120,4 +120,21 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
         ;
         $this->assertSame('2016-08-09 00:00:00', (string) $concept);
     }
+
+    public function testExaminerNameIsExtractedFromFieldPrincipalResultInterpreter()
+    {
+        $message = $this
+            ->messageParser
+            ->parse(SampleMessages::getDatagramBuilder(1)->build())
+        ;
+        $segmentGroups = $message->getSegmentGroups();
+        $concept = $this
+            ->observationProcessor
+            ->getDossier(array_shift($segmentGroups))
+            ->getResource()
+            ->getSection('echo')
+            ->getValue('peri22-dataelement-80754')
+        ;
+        $this->assertSame('dr. paracelsus', (string) $concept);
+    }
 }
