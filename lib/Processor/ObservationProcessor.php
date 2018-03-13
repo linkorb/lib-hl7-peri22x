@@ -299,6 +299,23 @@ class ObservationProcessor
                 $this->getValue($obr->getFieldPrincipalResultInterpreter()->getName()->getIdNumber())
             );
         }
+        if (is_array($obr->getFieldOrderingProvider())
+            && 0 < sizeof($obr->getFieldOrderingProvider())
+        ) {
+            $orderingProviders = $obr->getFieldOrderingProvider();
+            foreach ($orderingProviders as $orderingProvider) {
+                if (null === $orderingProvider->getIdNumber()
+                    || !$orderingProvider->getIdNumber()->hasValue()
+                ) {
+                    continue;
+                }
+                $dossier->addMetadata(
+                    'referring_practice',
+                    $this->getValue($orderingProvider->getIdNumber())
+                );
+                break;
+            }
+        }
         for (; $report->valid(); $report->next()) {
             if (!$report->current() instanceof ObxSegment) {
                 continue;

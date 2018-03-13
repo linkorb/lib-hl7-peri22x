@@ -137,4 +137,19 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
         ;
         $this->assertSame('dr. paracelsus', (string) $concept);
     }
+
+    public function testReferringPracticeMetadataIsExtractedFromFieldOrderingProvider()
+    {
+        $message = $this
+            ->messageParser
+            ->parse(SampleMessages::getDatagramBuilder(1)->build())
+        ;
+        $segmentGroups = $message->getSegmentGroups();
+        $referrer = $this
+            ->observationProcessor
+            ->getDossier(array_shift($segmentGroups))
+            ->getMetadata('referring_practice')
+        ;
+        $this->assertSame('praktijkveendam', $referrer);
+    }
 }

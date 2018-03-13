@@ -10,7 +10,7 @@ class SampleMessages
 MSH|^~\&|ACME|ACMETESTCENTRUM|TEST|TEST|20160719132745||ORU^R01|906|P|2.5.1|||AL|AL||8859/1
 PID|1||123548999^^^^NNNLD||ACMETEST^K||19850317|F|||Dam 1^^Amsterdam^^1000 AA||0619056432^^^acmetest@hotmail.com
 PV1|||||||||||||||||||12344
-OBR|||819^ACME|^OBS|||20160513130300||||||||||||||code  testlocatie||||F|||||||dr. paracelsus&&&&&&&&2147483647
+OBR|||819^ACME|^OBS|||20160513130300|||||||||praktijkveendam^Verloskundigenpraktijk Veendam|||||code  testlocatie||||F|||||||dr. paracelsus&&&&&&&&2147483647
 OBX|1|NM|GRAVIDA||1||||||F
 OBX|2|NM|PARITY||1||||||F
 OBX|3|TS|DUE_DATE||20160809000000||||||F
