@@ -103,4 +103,21 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
         ;
         $this->assertSame('192', (string) $concept);
     }
+
+    public function testDueDateIsExtractedFromObservationValue()
+    {
+        $message = $this
+            ->messageParser
+            ->parse(SampleMessages::getDatagramBuilder(1)->build())
+        ;
+        $segmentGroups = $message->getSegmentGroups();
+        $concept = $this
+            ->observationProcessor
+            ->getDossier(array_shift($segmentGroups))
+            ->getResource()
+            ->getSection('intake')
+            ->getValue('peri22-dataelement-20030')
+        ;
+        $this->assertSame('2016-08-09 00:00:00', (string) $concept);
+    }
 }

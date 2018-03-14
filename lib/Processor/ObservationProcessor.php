@@ -6,6 +6,7 @@ use DateTime;
 
 use Hl7v2\DataType\EdDataType;
 use Hl7v2\DataType\SimpleDataTypeInterface;
+use Hl7v2\DataType\TsDataType;
 use Hl7v2\DataType\XpnDataType;
 use Hl7v2\Segment\Group\SegmentGroup;
 use Hl7v2\Segment\ObrSegment;
