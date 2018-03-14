@@ -22,6 +22,7 @@ class DocumentFactory
      * Create an XmlDocument with the supplied DomDocument.
      *
      * @param DomDocument $domDocument
+     *
      * @return \Hl7Peri22x\Document\DocumentInterface
      */
     public function createXmlDocument(DomDocument $domDocument)
@@ -33,13 +34,14 @@ class DocumentFactory
      * Create an EmbeddedDocument with the supplied data.
      *
      * @param string $data
+     *
      * @return \Hl7Peri22x\Document\DocumentInterface
      */
     public function createEmbeddedDocument($data)
     {
         $mimeInfo = $this->finfo->buffer($data);
         list($mimeType, $charsetInfo) = explode('; ', $mimeInfo);
-        list(,$charset) = explode('=', $charsetInfo);
+        list(, $charset) = explode('=', $charsetInfo);
         return new EmbeddedDocument(
             $data,
             $mimeType,

@@ -122,7 +122,7 @@ class ObservationProcessor
         }
 
         foreach ($pid->getFieldPatientName() as $nameData) {
-            if (! $nameData->getNameTypeCode()->hasValue()
+            if (!$nameData->getNameTypeCode()->hasValue()
                 || $nameData->getNameTypeCode()->getValue() == 'L'
             ) {
                 $this->addLegalNameValue($section, $nameData);
@@ -245,7 +245,7 @@ class ObservationProcessor
             return;
         }
         /**
-         * @var \Hl7v2\Segment\ObrSegment $obr
+         * @var \Hl7v2\Segment\ObrSegment
          */
         $obr = $report->current();
         if ($obr->getFieldFillerOrderNumber() !== null &&
@@ -288,7 +288,7 @@ class ObservationProcessor
             $obr->getFieldPrincipalResultInterpreter()->getName()->getIdNumber() !== null &&
             $obr->getFieldPrincipalResultInterpreter()->getName()->getIdNumber()->hasValue()
         ) {
-            # a name!
+            // a name!
         }
         $intakeSection = $this->sectionFac->create(SectionInterface::TYPE_INTAKE);
         $consultSection = $this->sectionFac->create(SectionInterface::TYPE_CONSULT);
@@ -298,7 +298,7 @@ class ObservationProcessor
                 continue;
             }
             /**
-             * @var \Hl7v2\Segment\ObxSegment $obx
+             * @var \Hl7v2\Segment\ObxSegment
              */
             $obx = $report->current();
             $valueType = $this->getValue($obx->getFieldValueType());
@@ -534,7 +534,7 @@ class ObservationProcessor
         if (!array_key_exists($targetUnit, $conversions)
             || !array_key_exists($unit, $conversions[$targetUnit])
         ) {
-            return ''; # no value is better than the wrong value
+            return ''; // no value is better than the wrong value
         }
         return (string) $conversions[$targetUnit][$unit]($value);
     }
@@ -563,7 +563,7 @@ class ObservationProcessor
             $fileData = base64_decode($data->getData()->getValue(), true);
             if ($fileData === false) {
                 throw new ProcessorError(
-                    "Unable to decode Base64 encoded embedded file; encoding is invalid."
+                    'Unable to decode Base64 encoded embedded file; encoding is invalid.'
                 );
             }
         } elseif ($enc === 'A') {

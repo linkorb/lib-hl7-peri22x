@@ -44,6 +44,7 @@ interface DossierInterface
 
     /**
      * @param string $name
+     *
      * @return bool
      */
     public function hasMetadata($name);
@@ -52,6 +53,7 @@ interface DossierInterface
      * Get all metadata or a metadata value by name.
      *
      * @param null|string $name
+     *
      * @return array|mixed
      */
     public function getMetadata($name = null);

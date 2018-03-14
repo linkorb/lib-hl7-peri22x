@@ -11,7 +11,9 @@ class DateTimeHelper
      * Parse and format a date/time string according to its length.
      *
      * @param string $value
+     *
      * @return string
+     *
      * @throws \Exception
      */
     public static function format($value)

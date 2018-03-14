@@ -9,6 +9,7 @@ interface DocumentInterface
 {
     /**
      * @return string
+     *
      * @throws \Hl7Peri22x\Document\DocumentError;
      */
     public function toString();
