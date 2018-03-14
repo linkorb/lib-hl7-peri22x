@@ -4,15 +4,18 @@ namespace Hl7Peri22x\Dossier;
 
 use DomDocument;
 
-use Hl7Peri22x\Document\DocumentFactory;
-use Hl7Peri22x\Document\DocumentInterface;
 use Peri22x\Attachment\AttachmentFactory;
+use Peri22x\Attachment\AttachmentFactoryAwareInterface;
 use Peri22x\Resource\Resource;
+
+use Hl7Peri22x\Attachment\AttachmentStrategyInterface;
+use Hl7Peri22x\Document\DocumentFactory;
+use Hl7Peri22x\StorableInterface;
 
 /**
  * Model of a Hub dossier.
  */
-class Dossier implements DossierInterface
+class Dossier implements DossierInterface, StorableInterface
 {
     /**
      * @var \Peri22x\Attachment\AttachmentFactory
@@ -34,6 +37,10 @@ class Dossier implements DossierInterface
      * @var \Peri22x\Resource\Resource
      */
     private $resource;
+    /**
+     * @var string
+     */
+    private $storageKey;
 
     public function __construct(
         AttachmentFactory $attachmentFactory,
@@ -64,9 +71,6 @@ class Dossier implements DossierInterface
         if (!sizeof($this->embeddedFiles)) {
             return;
         }
-        foreach ($this->embeddedFiles as $embeddedFiles) {
-            $this->registerAttachment($embeddedFile);
-        }
     }
 
     public function getResource()
@@ -74,14 +78,10 @@ class Dossier implements DossierInterface
         return $this->resource;
     }
 
-    public function addFileData($data)
+    public function addFileData($data, $basename)
     {
-        $embeddedFile = $this->documentFactory->createEmbeddedDocument($data);
+        $embeddedFile = $this->documentFactory->createEmbeddedDocument($data, $basename);
         $this->embeddedFiles[] = $embeddedFile;
-
-        if ($this->resource) {
-            $this->registerAttachment($embeddedFile);
-        }
     }
 
     public function addMetadata($name, $value)
@@ -104,10 +104,28 @@ class Dossier implements DossierInterface
         return $this->metadata[$name];
     }
 
-    private function registerAttachment(DocumentInterface $embeddedFile)
+    public function setStorageKey($key)
     {
-        $attachment = $this->attachmentFactory->create();
-        $attachment->setMimeType($embeddedFile->getMimeType());
-        $this->resource->addAttachment($attachment);
+        $this->storageKey = $key;
+    }
+
+    public function getStorageKey()
+    {
+        return $this->storageKey;
+    }
+
+    public function registerAttachments(AttachmentStrategyInterface $attachmentStrategy)
+    {
+        if ($attachmentStrategy instanceof AttachmentFactoryAwareInterface) {
+            $attachmentStrategy->setAttachmentFactory($this->attachmentFactory);
+        }
+
+        $attachmentStrategy->process(
+            $this->resource,
+            $this->embeddedFiles,
+            [
+                'storage_key' => $this->storageKey,
+            ]
+        );
     }
 }

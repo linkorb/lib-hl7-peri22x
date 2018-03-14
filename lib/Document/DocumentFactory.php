@@ -34,16 +34,19 @@ class DocumentFactory
      * Create an EmbeddedDocument with the supplied data.
      *
      * @param string $data
+     * @param string $basename
      *
      * @return \Hl7Peri22x\Document\DocumentInterface
      */
-    public function createEmbeddedDocument($data)
+    public function createEmbeddedDocument($data, $basename)
     {
         $mimeInfo = $this->finfo->buffer($data);
         list($mimeType, $charsetInfo) = explode('; ', $mimeInfo);
         list(, $charset) = explode('=', $charsetInfo);
+
         return new EmbeddedDocument(
             $data,
+            $basename,
             $mimeType,
             $this->mimeTypes->getExtension($mimeType),
             $charset

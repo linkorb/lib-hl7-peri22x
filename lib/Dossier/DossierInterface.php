@@ -33,8 +33,9 @@ interface DossierInterface
 
     /**
      * @param string $data
+     * @param string $basename
      */
-    public function addFileData($data);
+    public function addFileData($data, $basename);
 
     /**
      * @param string $name

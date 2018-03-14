@@ -568,9 +568,11 @@ class ObservationProcessor
 
     private function extractEmbeddedFile(DossierInterface $dossier, ObxSegment $obx, $valueType)
     {
+        $observationId = strtolower($this->getValue($obx->getFieldObservationIdentifier()->getIdentifier()));
+
         if ($valueType === 'ED') {
             foreach ($obx->getFieldObservationValue() as $obsVal) {
-                $dossier->addFileData($this->extractEncapsulatedData($obsVal));
+                $dossier->addFileData($this->extractEncapsulatedData($obsVal), $observationId);
             }
         }
         if ($valueType === 'TX') {
@@ -578,7 +580,7 @@ class ObservationProcessor
             foreach ($obx->getFieldObservationValue() as $obsVal) {
                 $lines[] = $this->getValue($obsVal);
             }
-            $dossier->addFileData(implode("\n", $lines) . "\n");
+            $dossier->addFileData(implode("\n", $lines) . "\n", $observationId);
         }
     }
 
