@@ -427,10 +427,17 @@ class ObservationProcessor
                     );
                     break;
                 case 'placentaloc':
+                    $value = $this
+                        ->observationValueTransformer
+                        ->transform(
+                            $valueName,
+                            $this->getObservationValue($obx)
+                        )
+                    ;
                     $this->addObservationValue(
                         $echoSection,
                         'peri22-dataelement-80946', // placentalokalisatie
-                        $this->getObservationValue($obx),
+                        $value,
                         $this->getValue($obx->getFieldObservationSubid())
                     );
                     break;

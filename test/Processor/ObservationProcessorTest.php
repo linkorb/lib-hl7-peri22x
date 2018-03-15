@@ -14,6 +14,7 @@ use Hl7Peri22x\Document\DocumentFactory;
 use Hl7Peri22x\Dossier\DossierFactory;
 use Hl7Peri22x\Processor\ObservationProcessor;
 use Hl7Peri22x\Transformer\IdentityTransformer;
+use Hl7Peri22x\Transformer\MappingTransformer;
 
 use Hl7Peri22x\Test\SampleMessages;
 
@@ -323,5 +324,47 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
             ->getValue('peri22-dataelement-60081')
         ;
         $this->assertSame('26', (string) $concept);
+    }
+
+    public function testPlacentaLocationIsExtracted()
+    {
+        $message = $this
+            ->messageParser
+            ->parse(SampleMessages::getDatagramBuilder(1)->build())
+        ;
+        $segmentGroups = $message->getSegmentGroups();
+        $concept = $this
+            ->observationProcessor
+            ->getDossier(array_shift($segmentGroups))
+            ->getResource()
+            ->getSection('echo')
+            ->getValue('peri22-dataelement-80946')
+        ;
+        $this->assertSame('hoog anterior', (string) $concept);
+    }
+
+    public function testPlacentaLocationIsTransformed()
+    {
+        $message = $this
+            ->messageParser
+            ->parse(SampleMessages::getDatagramBuilder(1)->build())
+        ;
+        $segmentGroups = $message->getSegmentGroups();
+        $this
+            ->observationProcessor
+            ->setObservationValueTransformer(
+                new MappingTransformer(
+                    ['placentaloc' => ['hoog_anterior' => '7371000146105']]
+                )
+            )
+        ;
+        $concept = $this
+            ->observationProcessor
+            ->getDossier(array_shift($segmentGroups))
+            ->getResource()
+            ->getSection('echo')
+            ->getValue('peri22-dataelement-80946')
+        ;
+        $this->assertSame('7371000146105', (string) $concept);
     }
 }
