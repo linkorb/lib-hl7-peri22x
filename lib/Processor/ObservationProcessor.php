@@ -333,108 +333,110 @@ class ObservationProcessor
             switch (strtolower($valueName)) {
                 case 'gravida':
                     $this->addObservationValue(
-                        $obx,
                         $intakeSection,
-                        'peri22-dataelement-20010' // graviditeit
+                        'peri22-dataelement-20010', // graviditeit
+                        $this->getObservationValue($obx)
                     );
                     break;
                 case 'parity':
                     $this->addObservationValue(
-                        $obx,
                         $intakeSection,
-                        'peri22-dataelement-20153' // pariteit
+                        'peri22-dataelement-20153', // pariteit
+                        $this->getObservationValue($obx)
                     );
                     break;
                 case 'due_date':
                     $this->addObservationValue(
-                        $obx,
                         $intakeSection,
                         'peri22-dataelement-20030', // a terme datum
-                        true
+                        $this->getObservationValue($obx, null, true)
                     );
                     break;
                 case 'gestational_age':
                     $this->addObservationValue(
-                        $obx,
                         $echoSection,
                         'peri22-dataelement-50021', // Zwangerschapsduur op datum onderzoek,
-                        false,
-                        'days'
+                        $this->getObservationValue($obx, 'days')
                     );
                     break;
                 case 'weight':
-                    $this->addObservationValueMulti(
-                        $obx,
+                    $this->addObservationValue(
                         $echoSection,
                         'peri22-dataelement-82340', // efw in grammes
-                        false,
-                        'g'
+                        $this->getObservationValue($obx, 'g')
                     );
                     break;
                 case 'hc':
-                    $this->addObservationValueMulti(
-                        $obx,
+                    $this->addObservationValue(
                         $echoSection,
-                        'peri22-dataelement-60060' // hc in mm
+                        'peri22-dataelement-60060', // hc in mm
+                        $this->getObservationValue($obx, 'mm'),
+                        $this->getValue($obx->getFieldObservationSubid())
                     );
                     break;
                 case 'hcperc':
                 case 'hcp':
-                    $this->addObservationValueMulti(
-                        $obx,
+                    $this->addObservationValue(
                         $echoSection,
-                        'peri22-dataelement-60061' // hc percentiel
+                        'peri22-dataelement-60061', // hc percentiel
+                        $this->getObservationValue($obx),
+                        $this->getValue($obx->getFieldObservationSubid())
                     );
                     break;
                 case 'fl':
-                    $this->addObservationValueMulti(
-                        $obx,
+                    $this->addObservationValue(
                         $echoSection,
-                        'peri22-dataelement-60100' // fl in mm
+                        'peri22-dataelement-60100', // fl in mm
+                        $this->getObservationValue($obx, 'mm'),
+                        $this->getValue($obx->getFieldObservationSubid())
                     );
                     break;
                 case 'flperc':
                 case 'flp':
-                    $this->addObservationValueMulti(
-                        $obx,
+                    $this->addObservationValue(
                         $echoSection,
-                        'peri22-dataelement-60101' // fl percentiel
+                        'peri22-dataelement-60101', // fl percentiel
+                        $this->getObservationValue($obx),
+                        $this->getValue($obx->getFieldObservationSubid())
                     );
                     break;
                 case 'ac':
-                    $this->addObservationValueMulti(
-                        $obx,
+                    $this->addObservationValue(
                         $echoSection,
-                        'peri22-dataelement-60080' // ac in mm
+                        'peri22-dataelement-60080', // ac in mm
+                        $this->getObservationValue($obx, 'mm'),
+                        $this->getValue($obx->getFieldObservationSubid())
                     );
                     break;
                 case 'acperc':
                 case 'acp':
-                    $this->addObservationValueMulti(
-                        $obx,
+                    $this->addObservationValue(
                         $echoSection,
-                        'peri22-dataelement-60081' // ac percentiel
+                        'peri22-dataelement-60081', // ac percentiel
+                        $this->getObservationValue($obx),
+                        $this->getValue($obx->getFieldObservationSubid())
                     );
                     break;
                 case 'placentaloc':
-                    $this->addObservationValueMulti(
-                        $obx,
+                    $this->addObservationValue(
                         $echoSection,
-                        'peri22-dataelement-80946' // placentalokalisatie
+                        'peri22-dataelement-80946', // placentalokalisatie
+                        $this->getObservationValue($obx),
+                        $this->getValue($obx->getFieldObservationSubid())
                     );
                     break;
                 case 'diagnosis':
-                    $this->addObservationValueText(
-                        $obx,
+                    $this->addMultilineObservation(
                         $echoSection,
-                        'peri22x-echo-diagnose'
+                        'peri22x-echo-diagnose',
+                        $this->getMultilineObservationValue($obx)
                     );
                     break;
                 case 'conclusion':
-                    $this->addObservationValueText(
-                        $obx,
+                    $this->addMultilineObservation(
                         $echoSection,
-                        'peri22x-echo-conclusie'
+                        'peri22x-echo-conclusie',
+                        $this->getMultilineObservationValue($obx)
                     );
                     break;
                 case 'rapport':
@@ -470,70 +472,62 @@ class ObservationProcessor
         }
     }
 
-    private function addObservationValue(
+    private function getObservationValue(
         ObxSegment $obx,
-        SectionInterface $section,
-        $concept,
-        $isDate = false,
         $unit = null,
-        $subId = null
+        $isDate = false
     ) {
+        $values = [];
         foreach ($obx->getFieldObservationValue() as $obsVal) {
-            $v = null;
+            $value = null;
             if ($isDate) {
                 if ($obsVal instanceof TsDataType) {
-                    $v = $this->getDateValue($obsVal->getTime());
+                    $value = $this->getDateValue($obsVal->getTime());
                 }
             } else {
-                $v = $this->getValue($obsVal);
+                $value = $this->getValue($obsVal);
             }
             if ($unit) {
-                $v = $this->unitConversion(
-                    $v,
+                $value = $this->unitConversion(
+                    $value,
                     $this->getValue($obx->getFieldUnits()->getIdentifier()),
                     $unit
                 );
             }
-            if ($subId) {
-                $section->addValue($concept, $v, ['repeat' => $subId]);
-            } else {
-                $section->addValue($concept, $v);
-            }
+            $values[] = $value;
+        }
+        return implode(' ', $values);
+    }
+
+    private function addObservationValue(
+        SectionInterface $section,
+        $conceptId,
+        $value,
+        $subId = null
+    ) {
+        if ($subId) {
+            $section->addValue($conceptId, $value, ['repeat' => $subId]);
+        } else {
+            $section->addValue($conceptId, $value);
         }
     }
 
-    private function addObservationValueText(
-        ObxSegment $obx,
-        SectionInterface $section,
-        $concept
-    ) {
+    private function getMultilineObservationValue(ObxSegment $obx)
+    {
         $lines = [];
         foreach ($obx->getFieldObservationValue() as $obsVal) {
             $lines[] = $this->getValue($obsVal);
         }
-        $section->addCdataValue($concept, implode("\n", $lines));
+
+        return implode("\n", $lines);
     }
 
-    /*
-     * Call this for the kinds of observation value which exhibit a SubId.
-     * The SubId is used to distinguish one set observations from another.
-     */
-    private function addObservationValueMulti(
-        ObxSegment $obx,
+    private function addMultilineObservation(
         SectionInterface $section,
-        $concept,
-        $isDate = false,
-        $unit = null
+        $conceptId,
+        $value
     ) {
-        $subId = $this->getValue($obx->getFieldObservationSubid());
-        $this->addObservationValue(
-            $obx,
-            $section,
-            $concept,
-            $isDate,
-            $unit,
-            $subId
-        );
+        $section->addCdataValue($conceptId, $value);
     }
 
     private function unitConversion($value, $unit, $targetUnit)
