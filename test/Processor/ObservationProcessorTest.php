@@ -13,6 +13,7 @@ use PHPUnit_Framework_TestCase;
 use Hl7Peri22x\Document\DocumentFactory;
 use Hl7Peri22x\Dossier\DossierFactory;
 use Hl7Peri22x\Processor\ObservationProcessor;
+use Hl7Peri22x\Transformer\IdentityTransformer;
 
 use Hl7Peri22x\Test\SampleMessages;
 
@@ -37,7 +38,8 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
                 new DocumentFactory(new MimeTypes)
             ),
             new ResourceFactory(),
-            new SectionFactory(new ValueFactory)
+            new SectionFactory(new ValueFactory),
+            new IdentityTransformer
         );
     }
 

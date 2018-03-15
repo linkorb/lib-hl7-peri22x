@@ -20,6 +20,7 @@ use Peri22x\Section\SectionInterface;
 use Hl7Peri22x\Dossier\DossierFactory;
 use Hl7Peri22x\Dossier\DossierInterface;
 use Hl7Peri22x\Processor\Helper\DateTimeHelper;
+use Hl7Peri22x\Transformer\ValueTransformerInterface;
 
 /**
  * Convert a group of HL7 Segments, representing an Observation report and
@@ -28,17 +29,25 @@ use Hl7Peri22x\Processor\Helper\DateTimeHelper;
 class ObservationProcessor
 {
     private $dossierFac;
+    private $observationValueTransformer;
     private $resourceFac;
     private $sectionFac;
 
     public function __construct(
         DossierFactory $dossierFac,
         ResourceFactory $resourceFac,
-        SectionFactory $sectionFac
+        SectionFactory $sectionFac,
+        ValueTransformerInterface $observationValueTransformer
     ) {
         $this->dossierFac = $dossierFac;
         $this->resourceFac = $resourceFac;
         $this->sectionFac = $sectionFac;
+        $this->observationValueTransformer = $observationValueTransformer;
+    }
+
+    public function setObservationValueTransformer(ValueTransformerInterface $transformer)
+    {
+        $this->observationValueTransformer = $transformer;
     }
 
     public function getDossier(SegmentGroup $patient)
