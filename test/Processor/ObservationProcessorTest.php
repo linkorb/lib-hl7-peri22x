@@ -87,6 +87,40 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
         ];
     }
 
+    public function testGravidaIsExtracted()
+    {
+        $message = $this
+            ->messageParser
+            ->parse(SampleMessages::getDatagramBuilder(1)->build())
+        ;
+        $segmentGroups = $message->getSegmentGroups();
+        $concept = $this
+            ->observationProcessor
+            ->getDossier(array_shift($segmentGroups))
+            ->getResource()
+            ->getSection('intake')
+            ->getValue('peri22-dataelement-20010')
+        ;
+        $this->assertSame('1', (string) $concept);
+    }
+
+    public function testParityIsExtracted()
+    {
+        $message = $this
+            ->messageParser
+            ->parse(SampleMessages::getDatagramBuilder(1)->build())
+        ;
+        $segmentGroups = $message->getSegmentGroups();
+        $concept = $this
+            ->observationProcessor
+            ->getDossier(array_shift($segmentGroups))
+            ->getResource()
+            ->getSection('intake')
+            ->getValue('peri22-dataelement-20153')
+        ;
+        $this->assertSame('1', (string) $concept);
+    }
+
     public function testGestationalAgeIsMeasuredInDays()
     {
         $message = $this
@@ -168,5 +202,124 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
             ->getValue('peri22-dataelement-50020')
         ;
         $this->assertSame('2016-05-13 13:03:00', (string) $concept);
+    }
+
+    public function testWeightIsExtracted()
+    {
+        $message = $this
+            ->messageParser
+            ->parse(SampleMessages::getDatagramBuilder(1)->build())
+        ;
+        $segmentGroups = $message->getSegmentGroups();
+        $concept = $this
+            ->observationProcessor
+            ->getDossier(array_shift($segmentGroups))
+            ->getResource()
+            ->getSection('echo')
+            ->getValue('peri22-dataelement-82340')
+        ;
+        $this->assertSame('1034', (string) $concept);
+    }
+
+    public function testHeadCircumferenceIsExtracted()
+    {
+        $message = $this
+            ->messageParser
+            ->parse(SampleMessages::getDatagramBuilder(1)->build())
+        ;
+        $segmentGroups = $message->getSegmentGroups();
+        $concept = $this
+            ->observationProcessor
+            ->getDossier(array_shift($segmentGroups))
+            ->getResource()
+            ->getSection('echo')
+            ->getValue('peri22-dataelement-60060')
+        ;
+        $this->assertSame('251', (string) $concept);
+    }
+
+    public function testHeadCircumferencePercentileIsExtracted()
+    {
+        $message = $this
+            ->messageParser
+            ->parse(SampleMessages::getDatagramBuilder(1)->build())
+        ;
+        $segmentGroups = $message->getSegmentGroups();
+        $concept = $this
+            ->observationProcessor
+            ->getDossier(array_shift($segmentGroups))
+            ->getResource()
+            ->getSection('echo')
+            ->getValue('peri22-dataelement-60061')
+        ;
+        $this->assertSame('23.3', (string) $concept);
+    }
+
+    public function testFemurLengthIsExtracted()
+    {
+        $message = $this
+            ->messageParser
+            ->parse(SampleMessages::getDatagramBuilder(1)->build())
+        ;
+        $segmentGroups = $message->getSegmentGroups();
+        $concept = $this
+            ->observationProcessor
+            ->getDossier(array_shift($segmentGroups))
+            ->getResource()
+            ->getSection('echo')
+            ->getValue('peri22-dataelement-60100')
+        ;
+        $this->assertSame('51', (string) $concept);
+    }
+
+    public function testFemurLengthPercentileIsExtracted()
+    {
+        $message = $this
+            ->messageParser
+            ->parse(SampleMessages::getDatagramBuilder(1)->build())
+        ;
+        $segmentGroups = $message->getSegmentGroups();
+        $concept = $this
+            ->observationProcessor
+            ->getDossier(array_shift($segmentGroups))
+            ->getResource()
+            ->getSection('echo')
+            ->getValue('peri22-dataelement-60101')
+        ;
+        $this->assertSame('46.6', (string) $concept);
+    }
+
+    public function testAbdominalCircumferenceIsExtracted()
+    {
+        $message = $this
+            ->messageParser
+            ->parse(SampleMessages::getDatagramBuilder(1)->build())
+        ;
+        $segmentGroups = $message->getSegmentGroups();
+        $concept = $this
+            ->observationProcessor
+            ->getDossier(array_shift($segmentGroups))
+            ->getResource()
+            ->getSection('echo')
+            ->getValue('peri22-dataelement-60080')
+        ;
+        $this->assertSame('226', (string) $concept);
+    }
+
+    public function testAbdominalCircumferencePercentileIsExtracted()
+    {
+        $message = $this
+            ->messageParser
+            ->parse(SampleMessages::getDatagramBuilder(1)->build())
+        ;
+        $segmentGroups = $message->getSegmentGroups();
+        $concept = $this
+            ->observationProcessor
+            ->getDossier(array_shift($segmentGroups))
+            ->getResource()
+            ->getSection('echo')
+            ->getValue('peri22-dataelement-60081')
+        ;
+        $this->assertSame('26', (string) $concept);
     }
 }
