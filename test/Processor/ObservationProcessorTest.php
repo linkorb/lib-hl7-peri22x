@@ -13,6 +13,7 @@ use PHPUnit_Framework_TestCase;
 use Hl7Peri22x\Document\DocumentFactory;
 use Hl7Peri22x\Dossier\DossierFactory;
 use Hl7Peri22x\Processor\ObservationProcessor;
+use Hl7Peri22x\TextFilter\EscapeSequenceFilter;
 use Hl7Peri22x\Transformer\IdentityTransformer;
 use Hl7Peri22x\Transformer\MappingTransformer;
 
@@ -40,7 +41,8 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
             ),
             new ResourceFactory(),
             new SectionFactory(new ValueFactory),
-            new IdentityTransformer
+            new IdentityTransformer,
+            new EscapeSequenceFilter
         );
     }
 
@@ -52,6 +54,10 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
         $message = $this
             ->messageParser
             ->parse(SampleMessages::getDatagramBuilder($sampleMessage)->build())
+        ;
+        $this
+            ->observationProcessor
+            ->setEncodingParameters($message->getMessageHeader()->getEncodingParameters())
         ;
 
         foreach ($message->getSegmentGroups() as $observationParts) {
@@ -97,6 +103,11 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
             ->messageParser
             ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
         ;
+        $this
+            ->observationProcessor
+            ->setEncodingParameters($message->getMessageHeader()->getEncodingParameters())
+        ;
+
         $segmentGroups = $message->getSegmentGroups();
         $concept = $this
             ->observationProcessor
@@ -114,6 +125,11 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
             ->messageParser
             ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
         ;
+        $this
+            ->observationProcessor
+            ->setEncodingParameters($message->getMessageHeader()->getEncodingParameters())
+        ;
+
         $segmentGroups = $message->getSegmentGroups();
         $concept = $this
             ->observationProcessor
@@ -131,6 +147,11 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
             ->messageParser
             ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
         ;
+        $this
+            ->observationProcessor
+            ->setEncodingParameters($message->getMessageHeader()->getEncodingParameters())
+        ;
+
         $segmentGroups = $message->getSegmentGroups();
         $concept = $this
             ->observationProcessor
@@ -148,6 +169,11 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
             ->messageParser
             ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
         ;
+        $this
+            ->observationProcessor
+            ->setEncodingParameters($message->getMessageHeader()->getEncodingParameters())
+        ;
+
         $segmentGroups = $message->getSegmentGroups();
         $concept = $this
             ->observationProcessor
@@ -165,6 +191,11 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
             ->messageParser
             ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
         ;
+        $this
+            ->observationProcessor
+            ->setEncodingParameters($message->getMessageHeader()->getEncodingParameters())
+        ;
+
         $segmentGroups = $message->getSegmentGroups();
         $concept = $this
             ->observationProcessor
@@ -182,6 +213,11 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
             ->messageParser
             ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
         ;
+        $this
+            ->observationProcessor
+            ->setEncodingParameters($message->getMessageHeader()->getEncodingParameters())
+        ;
+
         $segmentGroups = $message->getSegmentGroups();
         $referrer = $this
             ->observationProcessor
@@ -197,6 +233,11 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
             ->messageParser
             ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
         ;
+        $this
+            ->observationProcessor
+            ->setEncodingParameters($message->getMessageHeader()->getEncodingParameters())
+        ;
+
         $segmentGroups = $message->getSegmentGroups();
         $concept = $this
             ->observationProcessor
@@ -214,6 +255,11 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
             ->messageParser
             ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
         ;
+        $this
+            ->observationProcessor
+            ->setEncodingParameters($message->getMessageHeader()->getEncodingParameters())
+        ;
+
         $segmentGroups = $message->getSegmentGroups();
         $concept = $this
             ->observationProcessor
@@ -231,6 +277,11 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
             ->messageParser
             ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
         ;
+        $this
+            ->observationProcessor
+            ->setEncodingParameters($message->getMessageHeader()->getEncodingParameters())
+        ;
+
         $segmentGroups = $message->getSegmentGroups();
         $concept = $this
             ->observationProcessor
@@ -248,6 +299,11 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
             ->messageParser
             ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
         ;
+        $this
+            ->observationProcessor
+            ->setEncodingParameters($message->getMessageHeader()->getEncodingParameters())
+        ;
+
         $segmentGroups = $message->getSegmentGroups();
         $concept = $this
             ->observationProcessor
@@ -265,6 +321,11 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
             ->messageParser
             ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
         ;
+        $this
+            ->observationProcessor
+            ->setEncodingParameters($message->getMessageHeader()->getEncodingParameters())
+        ;
+
         $segmentGroups = $message->getSegmentGroups();
         $concept = $this
             ->observationProcessor
@@ -282,6 +343,11 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
             ->messageParser
             ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
         ;
+        $this
+            ->observationProcessor
+            ->setEncodingParameters($message->getMessageHeader()->getEncodingParameters())
+        ;
+
         $segmentGroups = $message->getSegmentGroups();
         $concept = $this
             ->observationProcessor
@@ -299,6 +365,11 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
             ->messageParser
             ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
         ;
+        $this
+            ->observationProcessor
+            ->setEncodingParameters($message->getMessageHeader()->getEncodingParameters())
+        ;
+
         $segmentGroups = $message->getSegmentGroups();
         $concept = $this
             ->observationProcessor
@@ -316,6 +387,11 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
             ->messageParser
             ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
         ;
+        $this
+            ->observationProcessor
+            ->setEncodingParameters($message->getMessageHeader()->getEncodingParameters())
+        ;
+
         $segmentGroups = $message->getSegmentGroups();
         $concept = $this
             ->observationProcessor
@@ -333,6 +409,11 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
             ->messageParser
             ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
         ;
+        $this
+            ->observationProcessor
+            ->setEncodingParameters($message->getMessageHeader()->getEncodingParameters())
+        ;
+
         $segmentGroups = $message->getSegmentGroups();
         $concept = $this
             ->observationProcessor
@@ -350,6 +431,11 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
             ->messageParser
             ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
         ;
+        $this
+            ->observationProcessor
+            ->setEncodingParameters($message->getMessageHeader()->getEncodingParameters())
+        ;
+
         $segmentGroups = $message->getSegmentGroups();
         $this
             ->observationProcessor
@@ -369,12 +455,81 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
         $this->assertSame('7371000146105', (string) $concept);
     }
 
+    public function testDiagnosisIsExtractedAndUnescaped()
+    {
+        $message = $this
+            ->messageParser
+            ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
+        ;
+        $this
+            ->observationProcessor
+            ->setEncodingParameters($message->getMessageHeader()->getEncodingParameters())
+        ;
+
+        $segmentGroups = $message->getSegmentGroups();
+        $concept = $this
+            ->observationProcessor
+            ->getDossier(array_shift($segmentGroups))
+            ->getResource()
+            ->getSection('echo')
+            ->getValue('peri22x-echo-diagnose')
+        ;
+        $this->assertSame("Groei:\ngoede groei op de p ", (string) $concept);
+    }
+
+    public function testConclusionIsExtractedAndUnescaped()
+    {
+        $message = $this
+            ->messageParser
+            ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
+        ;
+        $this
+            ->observationProcessor
+            ->setEncodingParameters($message->getMessageHeader()->getEncodingParameters())
+        ;
+
+        $segmentGroups = $message->getSegmentGroups();
+        $concept = $this
+            ->observationProcessor
+            ->getDossier(array_shift($segmentGroups))
+            ->getResource()
+            ->getSection('echo')
+            ->getValue('peri22x-echo-conclusie')
+        ;
+        $this->assertSame("dit is de conclusie\ndit is de 2e regel", (string) $concept);
+    }
+
+    public function testEDAIsExtractedAndUnescaped()
+    {
+        $message = $this
+            ->messageParser
+            ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE_TEXT_REPORT)->build())
+        ;
+        $this
+            ->observationProcessor
+            ->setEncodingParameters($message->getMessageHeader()->getEncodingParameters())
+        ;
+
+        $segmentGroups = $message->getSegmentGroups();
+        $files = $this
+            ->observationProcessor
+            ->getDossier(array_shift($segmentGroups))
+            ->getEmbeddedFiles()
+        ;
+        $this->assertSame("This is a report:\nEnde", $files[0]->toString());
+    }
+
     public function testPatientMobilePhoneNumberIsExtractedAsDossierMetadata()
     {
         $message = $this
             ->messageParser
             ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
         ;
+        $this
+            ->observationProcessor
+            ->setEncodingParameters($message->getMessageHeader()->getEncodingParameters())
+        ;
+
         $segmentGroups = $message->getSegmentGroups();
         $dossier = $this
             ->observationProcessor
@@ -390,6 +545,11 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
             ->messageParser
             ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
         ;
+        $this
+            ->observationProcessor
+            ->setEncodingParameters($message->getMessageHeader()->getEncodingParameters())
+        ;
+
         $segmentGroups = $message->getSegmentGroups();
         $dossier = $this
             ->observationProcessor

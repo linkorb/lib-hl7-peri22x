@@ -24,8 +24,8 @@ OBX|10|NM|ACperc|1|26|Verb|||||F
 OBX|11|NM|FLperc|1|46.6|Verb|||||F
 OBX|12|NM|WEIGHTperc|1|48,5|Yudkin|||||F
 OBX|13|TX|PLACENTALOC|1|hoog anterior||||||F
-OBX|14|TX|DIAGNOSIS||Groei: goede groei op de p ||||||F
-OBX|15|TX|CONCLUSION||dit is de conclusie~dit is de 2e regel||||||F
+OBX|14|TX|DIAGNOSIS||Groei:\.br\goede groei op de p ||||||F
+OBX|15|TX|CONCLUSION||dit is de \H\conclusie\N\~dit is de 2e regel||||||F
 OBX|16|ED|RAPPORT||PDF^TEXT^^Base64^JVBERi0xLjQKJeLj||||||F
 EOD;
 
@@ -47,6 +47,12 @@ OBX|11|TX|PLACENTALOC|1|hoog anterior||||||F
 OBX|12|TX|PLACENTALOC|2|hoog anterior||||||F
 OBX|13|TX|DIAGNOSIS||Er zijn geen aanwijzingen voor structurele afwijkingen. ||||||F
 OBX|14|ED|RAPPORT||PDF^TEXT^^Base64^JVBERi0xLjQKJeLj||||||F
+EOD;
+    const MESSAGE_TEXT_REPORT = <<<'EOD'
+MSH|^~\&|ACME|ACME|TEST|TEST|20160719130739||ORU^R01|969|P|2.5.1|||AL|AL||8859/1
+PID|1||64654^^^^PI~123548999^^^^NNNLD||ACMETEST^K||19850317|F|||Dam 1^^Amsterdam^^1000 AA||0619056432^^^acmetest@hotmail.com
+OBR|||919^ACME|^OBS|||20160407123100||||||||||||||||||C|||||||admin&&&&&&&&BSK
+OBX|1|ED|RAPPORT||^TEXT^^A^This is a report:\.br\Ende||||||F
 EOD;
 
     public static function getDatagramBuilder($message = self::MESSAGE)

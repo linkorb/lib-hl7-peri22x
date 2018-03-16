@@ -9,6 +9,7 @@ use Hl7v2\DataType\SimpleDataTypeInterface;
 use Hl7v2\DataType\TsDataType;
 use Hl7v2\DataType\XpnDataType;
 use Hl7v2\DataType\XtnDataType;
+use Hl7v2\Encoding\EncodingParameters;
 use Hl7v2\Segment\Group\SegmentGroup;
 use Hl7v2\Segment\ObrSegment;
 use Hl7v2\Segment\ObxSegment;
@@ -21,6 +22,7 @@ use Peri22x\Section\SectionInterface;
 use Hl7Peri22x\Dossier\DossierFactory;
 use Hl7Peri22x\Dossier\DossierInterface;
 use Hl7Peri22x\Processor\Helper\DateTimeHelper;
+use Hl7Peri22x\TextFilter\EscapeSequenceFilter;
 use Hl7Peri22x\Transformer\ValueTransformerInterface;
 
 /**
@@ -30,6 +32,7 @@ use Hl7Peri22x\Transformer\ValueTransformerInterface;
 class ObservationProcessor
 {
     private $dossierFac;
+    private $escapeSequenceFilter;
     private $observationValueTransformer;
     private $resourceFac;
     private $sectionFac;
@@ -38,17 +41,29 @@ class ObservationProcessor
         DossierFactory $dossierFac,
         ResourceFactory $resourceFac,
         SectionFactory $sectionFac,
-        ValueTransformerInterface $observationValueTransformer
+        ValueTransformerInterface $observationValueTransformer,
+        EscapeSequenceFilter $escapeSequenceFilter
     ) {
         $this->dossierFac = $dossierFac;
         $this->resourceFac = $resourceFac;
         $this->sectionFac = $sectionFac;
         $this->observationValueTransformer = $observationValueTransformer;
+        $this->escapeSequenceFilter = $escapeSequenceFilter;
     }
 
     public function setObservationValueTransformer(ValueTransformerInterface $transformer)
     {
         $this->observationValueTransformer = $transformer;
+    }
+
+    /**
+     * Set the encoding parameters that were used to parse the Observation.
+     *
+     * @param \Hl7v2\Encoding\EncodingParameters $parameters
+     */
+    public function setEncodingParameters(EncodingParameters $parameters)
+    {
+        $this->escapeSequenceFilter->setEncodingParameters($parameters);
     }
 
     public function getDossier(SegmentGroup $patient)
@@ -634,7 +649,7 @@ class ObservationProcessor
                 );
             }
         } elseif ($enc === 'A') {
-            $fileData = $data->getData()->getValue();
+            $fileData = $this->getValue($data->getData());
         } else {
             throw new ProcessorError(
                 "Unable to extract embedded file encoded as \"{$enc}\"."
@@ -699,6 +714,9 @@ class ObservationProcessor
 
     private function getValue(SimpleDataTypeInterface $data)
     {
+        if ($this->escapeSequenceFilter->isValueSupported($data)) {
+            return $this->escapeSequenceFilter->filter($data);
+        }
         return $this->normaliseEncoding(
             $data->getValue(),
             $data->getCharacterEncoding()
