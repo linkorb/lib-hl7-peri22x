@@ -8,6 +8,7 @@ use Hl7v2\DataType\EdDataType;
 use Hl7v2\DataType\SimpleDataTypeInterface;
 use Hl7v2\DataType\TsDataType;
 use Hl7v2\DataType\XpnDataType;
+use Hl7v2\DataType\XtnDataType;
 use Hl7v2\Segment\Group\SegmentGroup;
 use Hl7v2\Segment\ObrSegment;
 use Hl7v2\Segment\ObxSegment;
@@ -208,6 +209,33 @@ class ObservationProcessor
                     'peri22-dataelement-10308', // adrestype
                     $this->getValue($addr->getAddressType())
                 );
+            }
+        }
+
+        foreach ($pid->getFieldPhoneNumberHome() as $contactDetails) {
+            if (null === $contactDetails->getTelepcommunicationEquipmentType()
+                || !$contactDetails->getTelepcommunicationEquipmentType()->hasValue()
+            ) {
+                continue;
+            }
+            $contactType = $this->getValue($contactDetails->getTelepcommunicationEquipmentType());
+            $contactUsage = $contactDetails->getTelecommunicationUseCode()
+                && $contactDetails->getTelecommunicationUseCode()->hasValue()
+                ? $this->getValue($contactDetails->getTelecommunicationUseCode())
+                : null
+            ;
+            if ('CP' === $contactType) {
+                $value = $this->extractPhoneNumber($contactDetails);
+                if (!$value) {
+                    continue;
+                }
+                $dossier->addMetadata('client_mobile_phone_number', $value);
+            } elseif ('X.400' === $contactType && 'NET' === $contactUsage) {
+                $value = $this->getValue($contactDetails->getEmailAddress());
+                if (!$value) {
+                    continue;
+                }
+                $dossier->addMetadata('client_email_address', $value);
             }
         }
     }
@@ -613,6 +641,60 @@ class ObservationProcessor
             );
         }
         return $fileData;
+    }
+
+    /*
+     * Extract a phone number from an XTN.
+     *
+     * @param XtnDataType $data
+     *
+     * @return string|null
+     */
+    private function extractPhoneNumber(XtnDataType $data)
+    {
+        $number = null;
+
+        if ($data->getLocalNumber() && $data->getLocalNumber()->hasValue()) {
+            $num = $this->getValue($data->getLocalNumber());
+            $cc = $data->getCountryCode() && $data->getCountryCode()->hasValue()
+                ? $this->getValue($data->getCountryCode())
+                : null
+            ;
+            $ac = $data->getAreaCityCode() && $data->getAreaCityCode()->hasValue()
+                ? $this->getValue($data->getAreaCityCode())
+                : null
+            ;
+            $ext = $data->getExtension() && $data->getExtension()->hasValue()
+                ? $this->getValue($data->getExtension())
+                : null
+            ;
+            $extPrefix = $data->getExtensionPrefix() && $data->getExtensionPrefix()->hasValue()
+                ? $this->getValue($data->getExtensionPrefix())
+                : null
+            ;
+            if ($cc && $ac && '0' === substr($ac, 0, 1)) {
+                $ac = substr($ac, 1);
+            }
+            if ($cc && $ac) {
+                $num = "{$cc} {$ac}{$num}";
+            } elseif ($cc) {
+                $num = "{$cc} {$num}";
+            } elseif ($ac) {
+                $num = "{$ac}{$num}";
+            }
+            if ($ext && $extPrefix) {
+                $num .= " {$extPrefix}{$ext}";
+            } elseif ($ext) {
+                $num .= " {$ext}";
+            }
+            $number = null;
+        } elseif ($data->getUnformattedTelephoneNumber() && $data->getUnformattedTelephoneNumber()->hasValue()) {
+            $number = $this->getValue($data->getUnformattedTelephoneNumber());
+        } elseif ($data->getTelephoneNumber() && $data->getTelephoneNumber()->hasValue()) {
+            $number = $this->getValue($data->getTelephoneNumber());
+        }
+
+        return $number;
     }
 
     private function getValue(SimpleDataTypeInterface $data)

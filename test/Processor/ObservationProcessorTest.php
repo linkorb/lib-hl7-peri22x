@@ -367,4 +367,34 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
         ;
         $this->assertSame('7371000146105', (string) $concept);
     }
+
+    public function testPatientMobilePhoneNumberIsExtractedAsDossierMetadata()
+    {
+        $message = $this
+            ->messageParser
+            ->parse(SampleMessages::getDatagramBuilder(1)->build())
+        ;
+        $segmentGroups = $message->getSegmentGroups();
+        $dossier = $this
+            ->observationProcessor
+            ->getDossier(array_shift($segmentGroups))
+        ;
+        $this->assertTrue($dossier->hasMetadata('client_mobile_phone_number'));
+        $this->assertSame('0619056432', $dossier->getMetadata('client_mobile_phone_number'));
+    }
+
+    public function testPatientEmailAddressIsExtractedAsDossierMetadata()
+    {
+        $message = $this
+            ->messageParser
+            ->parse(SampleMessages::getDatagramBuilder(1)->build())
+        ;
+        $segmentGroups = $message->getSegmentGroups();
+        $dossier = $this
+            ->observationProcessor
+            ->getDossier(array_shift($segmentGroups))
+        ;
+        $this->assertTrue($dossier->hasMetadata('client_email_address'));
+        $this->assertSame('acmetest@hotmail.com', $dossier->getMetadata('client_email_address'));
+    }
 }
