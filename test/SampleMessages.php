@@ -49,16 +49,9 @@ OBX|13|TX|DIAGNOSIS||Er zijn geen aanwijzingen voor structurele afwijkingen. |||
 OBX|14|ED|RAPPORT||PDF^TEXT^^Base64^JVBERi0xLjQKJeLj||||||F
 EOD;
 
-    public static function getDatagramBuilder($message = 1)
+    public static function getDatagramBuilder($message = self::MESSAGE)
     {
         $b = new DatagramBuilder(new EncodingParametersBuilder());
-        return $b->withMessage(
-            str_replace(
-                "\n",
-                "\r",
-                $message == 1 ? self::MESSAGE : self::MESSAGE_TWIN
-            )
-            . "\r"
-        );
+        return $b->withMessage(str_replace("\n", "\r", $message) . "\r");
     }
 }

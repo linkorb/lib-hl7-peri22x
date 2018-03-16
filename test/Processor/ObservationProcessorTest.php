@@ -47,12 +47,13 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider dataTransformMessage
      */
-    public function testTransformMessage($messageNum, $sectionCount)
+    public function testTransformMessage($sampleMessage, $sectionCount)
     {
         $message = $this
             ->messageParser
-            ->parse(SampleMessages::getDatagramBuilder($messageNum)->build())
+            ->parse(SampleMessages::getDatagramBuilder($sampleMessage)->build())
         ;
+
         foreach ($message->getSegmentGroups() as $observationParts) {
             $dossier = $this->observationProcessor->getDossier($observationParts);
             $this->assertCount(
@@ -85,8 +86,8 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
     public function dataTransformMessage()
     {
         return [
-            'Message 1 will result in 3 dossier sections.' => [1, 3],
-            'Message 2 will result in 3 dossier sections.' => [2, 3],
+            'Message 1 will result in 3 dossier sections.' => [SampleMessages::MESSAGE, 3],
+            'Message 2 will result in 3 dossier sections.' => [SampleMessages::MESSAGE_TWIN, 3],
         ];
     }
 
@@ -94,7 +95,7 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
     {
         $message = $this
             ->messageParser
-            ->parse(SampleMessages::getDatagramBuilder(1)->build())
+            ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
         ;
         $segmentGroups = $message->getSegmentGroups();
         $concept = $this
@@ -111,7 +112,7 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
     {
         $message = $this
             ->messageParser
-            ->parse(SampleMessages::getDatagramBuilder(1)->build())
+            ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
         ;
         $segmentGroups = $message->getSegmentGroups();
         $concept = $this
@@ -128,7 +129,7 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
     {
         $message = $this
             ->messageParser
-            ->parse(SampleMessages::getDatagramBuilder(1)->build())
+            ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
         ;
         $segmentGroups = $message->getSegmentGroups();
         $concept = $this
@@ -145,7 +146,7 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
     {
         $message = $this
             ->messageParser
-            ->parse(SampleMessages::getDatagramBuilder(1)->build())
+            ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
         ;
         $segmentGroups = $message->getSegmentGroups();
         $concept = $this
@@ -162,7 +163,7 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
     {
         $message = $this
             ->messageParser
-            ->parse(SampleMessages::getDatagramBuilder(1)->build())
+            ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
         ;
         $segmentGroups = $message->getSegmentGroups();
         $concept = $this
@@ -179,7 +180,7 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
     {
         $message = $this
             ->messageParser
-            ->parse(SampleMessages::getDatagramBuilder(1)->build())
+            ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
         ;
         $segmentGroups = $message->getSegmentGroups();
         $referrer = $this
@@ -194,7 +195,7 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
     {
         $message = $this
             ->messageParser
-            ->parse(SampleMessages::getDatagramBuilder(1)->build())
+            ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
         ;
         $segmentGroups = $message->getSegmentGroups();
         $concept = $this
@@ -211,7 +212,7 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
     {
         $message = $this
             ->messageParser
-            ->parse(SampleMessages::getDatagramBuilder(1)->build())
+            ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
         ;
         $segmentGroups = $message->getSegmentGroups();
         $concept = $this
@@ -228,7 +229,7 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
     {
         $message = $this
             ->messageParser
-            ->parse(SampleMessages::getDatagramBuilder(1)->build())
+            ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
         ;
         $segmentGroups = $message->getSegmentGroups();
         $concept = $this
@@ -245,7 +246,7 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
     {
         $message = $this
             ->messageParser
-            ->parse(SampleMessages::getDatagramBuilder(1)->build())
+            ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
         ;
         $segmentGroups = $message->getSegmentGroups();
         $concept = $this
@@ -262,7 +263,7 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
     {
         $message = $this
             ->messageParser
-            ->parse(SampleMessages::getDatagramBuilder(1)->build())
+            ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
         ;
         $segmentGroups = $message->getSegmentGroups();
         $concept = $this
@@ -279,7 +280,7 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
     {
         $message = $this
             ->messageParser
-            ->parse(SampleMessages::getDatagramBuilder(1)->build())
+            ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
         ;
         $segmentGroups = $message->getSegmentGroups();
         $concept = $this
@@ -296,7 +297,7 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
     {
         $message = $this
             ->messageParser
-            ->parse(SampleMessages::getDatagramBuilder(1)->build())
+            ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
         ;
         $segmentGroups = $message->getSegmentGroups();
         $concept = $this
@@ -313,7 +314,7 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
     {
         $message = $this
             ->messageParser
-            ->parse(SampleMessages::getDatagramBuilder(1)->build())
+            ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
         ;
         $segmentGroups = $message->getSegmentGroups();
         $concept = $this
@@ -330,7 +331,7 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
     {
         $message = $this
             ->messageParser
-            ->parse(SampleMessages::getDatagramBuilder(1)->build())
+            ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
         ;
         $segmentGroups = $message->getSegmentGroups();
         $concept = $this
@@ -347,7 +348,7 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
     {
         $message = $this
             ->messageParser
-            ->parse(SampleMessages::getDatagramBuilder(1)->build())
+            ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
         ;
         $segmentGroups = $message->getSegmentGroups();
         $this
@@ -372,7 +373,7 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
     {
         $message = $this
             ->messageParser
-            ->parse(SampleMessages::getDatagramBuilder(1)->build())
+            ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
         ;
         $segmentGroups = $message->getSegmentGroups();
         $dossier = $this
@@ -387,7 +388,7 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
     {
         $message = $this
             ->messageParser
-            ->parse(SampleMessages::getDatagramBuilder(1)->build())
+            ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE)->build())
         ;
         $segmentGroups = $message->getSegmentGroups();
         $dossier = $this
