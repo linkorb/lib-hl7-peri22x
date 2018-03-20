@@ -245,6 +245,12 @@ class ObservationProcessor
                     continue;
                 }
                 $dossier->addMetadata('client_mobile_phone_number', $value);
+            } elseif ('PH' === $contactType) {
+                $value = $this->extractPhoneNumber($contactDetails);
+                if (!$value) {
+                    continue;
+                }
+                $dossier->addMetadata('client_phone_number', $value);
             } elseif ('X.400' === $contactType && 'NET' === $contactUsage) {
                 $value = $this->getValue($contactDetails->getEmailAddress());
                 if (!$value) {
