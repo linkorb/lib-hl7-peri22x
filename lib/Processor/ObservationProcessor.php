@@ -475,6 +475,21 @@ class ObservationProcessor
                         $this->getValue($obx->getFieldObservationSubid())
                     );
                     break;
+                case 'ligging':
+                    $value = $this
+                        ->observationValueTransformer
+                        ->transform(
+                            $valueName,
+                            $this->getObservationValue($obx)
+                        )
+                    ;
+                    $this->addObservationValue(
+                        $echoSection,
+                        'peri22-dataelement-80944', // ligging
+                        $value,
+                        $this->getValue($obx->getFieldObservationSubid())
+                    );
+                    break;
                 case 'placentaloc':
                     $value = $this
                         ->observationValueTransformer

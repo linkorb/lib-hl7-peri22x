@@ -403,6 +403,58 @@ class ObservationProcessorTest extends PHPUnit_Framework_TestCase
         $this->assertSame('26', (string) $concept);
     }
 
+    public function testLieIsExtracted()
+    {
+        $message = $this
+            ->messageParser
+            ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE_TEXT_REPORT)->build())
+        ;
+        $this
+            ->observationProcessor
+            ->setEncodingParameters($message->getMessageHeader()->getEncodingParameters())
+        ;
+
+        $segmentGroups = $message->getSegmentGroups();
+        $concept = $this
+            ->observationProcessor
+            ->getDossier(array_shift($segmentGroups))
+            ->getResource()
+            ->getSection('echo')
+            ->getValue('peri22-dataelement-80944')
+        ;
+        $this->assertSame('transvers', (string) $concept);
+    }
+
+    public function testLieIsTransformed()
+    {
+        $message = $this
+            ->messageParser
+            ->parse(SampleMessages::getDatagramBuilder(SampleMessages::MESSAGE_TEXT_REPORT)->build())
+        ;
+        $this
+            ->observationProcessor
+            ->setEncodingParameters($message->getMessageHeader()->getEncodingParameters())
+        ;
+
+        $segmentGroups = $message->getSegmentGroups();
+        $this
+            ->observationProcessor
+            ->setObservationValueTransformer(
+                new MappingTransformer(
+                    ['ligging' => ['transvers' => '288203005']]
+                )
+            )
+        ;
+        $concept = $this
+            ->observationProcessor
+            ->getDossier(array_shift($segmentGroups))
+            ->getResource()
+            ->getSection('echo')
+            ->getValue('peri22-dataelement-80944')
+        ;
+        $this->assertSame('288203005', (string) $concept);
+    }
+
     public function testPlacentaLocationIsExtracted()
     {
         $message = $this

@@ -53,6 +53,7 @@ MSH|^~\&|ACME|ACME|TEST|TEST|20160719130739||ORU^R01|969|P|2.5.1|||AL|AL||8859/1
 PID|1||64654^^^^PI~123548999^^^^NNNLD||ACMETEST^K||19850317|F|||Dam 1^^Amsterdam^^1000 AA||^^PH^^^^^^^^^0619056432
 OBR|||919^ACME|^OBS|||20160407123100||||||||||||||||||C|||||||admin&&&&&&&&BSK
 OBX|1|ED|RAPPORT||^TEXT^^A^This is a report:\.br\Ende||||||F
+OBX|2|TX|LIGGING|1|transvers||||||F
 EOD;
 
     public static function getDatagramBuilder($message = self::MESSAGE)
