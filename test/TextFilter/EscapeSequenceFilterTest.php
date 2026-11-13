@@ -66,6 +66,7 @@ class EscapeSequenceFilterTest extends PHPUnit_Framework_TestCase
         return [
             ['utf8', 'Здравей\\.br\\свят', "Здравей\nсвят"],
             ['7bit', 'Hello\\.br\\World', "Hello\nWorld"],
+            ['7BIT', 'Hello\\.br\\World', "Hello\nWorld"],
             ['7bit', 'Hello/.br/World', "Hello\nWorld", '/'],
             ['7bit', 'Hello\\.ce\\World', "Hello\nWorld"],
             ['7bit', 'Hello\\.sp\\World', "Hello\nWorld"],
