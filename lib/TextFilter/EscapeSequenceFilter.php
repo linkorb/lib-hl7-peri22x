@@ -93,6 +93,12 @@ class EscapeSequenceFilter
 
     private function normaliseText($text, $characterEncoding)
     {
+        // HL7 uses 7bit for ASCII text; mbstring does not accept it as an
+        // encoding name on supported PHP versions.
+        if (is_string($characterEncoding) && strcasecmp($characterEncoding, '7bit') === 0) {
+            $characterEncoding = 'ASCII';
+        }
+
         return mb_convert_encoding($text, 'utf8', $characterEncoding);
     }
 
